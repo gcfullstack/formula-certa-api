@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-novo-hml
+  labels:
+    run: api-novo-hml
+spec:
+  rules:
+  - host: hml-api-novo.gruposfa.com.br
+    http:
+      paths:
+      - backend:
+          serviceName: api-novo-hml
+          servicePort: 80
