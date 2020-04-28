@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-novo-hml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: api-novo-hml
+  template:
+    metadata:
+        labels:
+          run: api-novo-hml
+    spec:
+      containers:
+        - name: api-novo-hml
+          image: srv-docker.sfa.local:5000/api-novo-hml:development
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - name: sfa-fs-app
+            mountPath: /mnt/sfa-fs-app
+      volumes:
+      - name: sfa-fs-app
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "cifs-secretsfaapp"
+          options:
+            networkPath: "//bdsfa/sfa-fs-app"
+            mountOptions: "dir_mode=0755,file_mode=0644,noperm"
