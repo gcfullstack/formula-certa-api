@@ -1,0 +1,130 @@
+package corp.gruposfa.novo.dto;
+
+import java.util.Date;
+
+import com.ibm.icu.math.BigDecimal;
+
+public class NotaFiscalDTO {
+
+	private Integer id;
+	private Integer empresa;
+	private Integer loja;
+	private String numeroNota;
+	private Date dataEmissao;
+	private Date dataEntrada;
+	private Date dataUpload;
+	private BigDecimal valor;
+	private String usuario;
+	private String cnpjFornecedor;
+	private String nomeFornecedor;
+	private String nomeArquivo;
+	
+	public NotaFiscalDTO(NotaFiscalInterfaceDTO x) {
+		this.id = x.getId();
+		this.empresa = x.getEmpresa();
+		this.loja = x.getLoja();
+		this.numeroNota = x.getNumeroNota();
+		this.dataEmissao = x.getDataEmissao();
+		this.dataEntrada = x.getDataEntrada();
+		this.dataUpload = x.getDataUpload();
+		this.valor = x.getValor();
+		this.usuario = x.getUsuario();
+		this.cnpjFornecedor = x.getCnpjFornecedor();
+		this.nomeFornecedor = x.getNomeFornecedor();
+		this.nomeArquivo = x.getNomeArquivo();
+	}
+
+	public NotaFiscalDTO() {
+		
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Integer getEmpresa() {
+		return empresa;
+	}
+	public void setEmpresa(Integer empresa) {
+		this.empresa = empresa;
+	}
+	public Integer getLoja() {
+		return loja;
+	}
+	public void setLoja(Integer loja) {
+		this.loja = loja;
+	}
+	public String getNumeroNota() {
+		return numeroNota;
+	}
+	public void setNumeroNota(String numeroNota) {
+		this.numeroNota = numeroNota;
+	}
+	public Date getDataEmissao() {
+		return dataEmissao;
+	}
+	public void setDataEmissao(Date dataEmissao) {
+		this.dataEmissao = dataEmissao;
+	}
+	public Date getDataEntrada() {
+		return dataEntrada;
+	}
+	public void setDataEntrada(Date dataEntrada) {
+		this.dataEntrada = dataEntrada;
+	}
+	public Date getDataUpload() {
+		return dataUpload;
+	}
+	public void setDataUpload(Date dataUpload) {
+		this.dataUpload = dataUpload;
+	}
+	public BigDecimal getValor() {
+		return valor;
+	}
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	public String getCnpjFornecedor() {
+		return cnpjFornecedor;
+	}
+	public void setCnpjFornecedor(String cnpjFornecedor) {
+		this.cnpjFornecedor = cnpjFornecedor;
+	}
+	public String getNomeFornecedor() {
+		return nomeFornecedor;
+	}
+	public void setNomeFornecedor(String nomeFornecedor) {
+		this.nomeFornecedor = nomeFornecedor;
+	}
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
+
+	public interface NotaFiscalInterfaceDTO {
+
+		Integer getId();
+		Integer getEmpresa();
+		Integer getLoja();
+		String getNumeroNota();
+		Date getDataEmissao();
+		Date getDataEntrada();
+		Date getDataUpload();
+		BigDecimal getValor();
+		String getUsuario();
+		String getCnpjFornecedor();
+		String getNomeFornecedor();
+		String getNomeArquivo();
+		
+	}
+}
