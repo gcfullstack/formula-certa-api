@@ -1,8 +1,7 @@
 package corp.gruposfa.novo.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
-
-import com.ibm.icu.math.BigDecimal;
 
 public class NotaFiscalDTO {
 
@@ -18,6 +17,7 @@ public class NotaFiscalDTO {
 	private String cnpjFornecedor;
 	private String nomeFornecedor;
 	private String nomeArquivo;
+	private Integer enviado;
 	
 	public NotaFiscalDTO(NotaFiscalInterfaceDTO x) {
 		this.id = x.getId();
@@ -32,6 +32,7 @@ public class NotaFiscalDTO {
 		this.cnpjFornecedor = x.getCnpjFornecedor();
 		this.nomeFornecedor = x.getNomeFornecedor();
 		this.nomeArquivo = x.getNomeArquivo();
+		this.enviado = x.getEnviado();
 	}
 
 	public NotaFiscalDTO() {
@@ -110,6 +111,12 @@ public class NotaFiscalDTO {
 	public void setNomeArquivo(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
 	}
+	public Integer getEnviado() {
+		return enviado;
+	}
+	public void setEnviado(Integer enviado) {
+		this.enviado = enviado;
+	}
 
 	public interface NotaFiscalInterfaceDTO {
 
@@ -125,6 +132,7 @@ public class NotaFiscalDTO {
 		String getCnpjFornecedor();
 		String getNomeFornecedor();
 		String getNomeArquivo();
+		Integer getEnviado();
 		
 	}
 }

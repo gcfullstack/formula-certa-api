@@ -1,5 +1,6 @@
 package corp.gruposfa.novo.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -9,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.ibm.icu.math.BigDecimal;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "NVO_NOTAS_FISCAIS")
@@ -30,10 +31,12 @@ public class NotaFiscal {
 
 	@Column(name = "NVO_NUMERO_NOTA")
 	private String numeroNota;
-
+	
+    @Temporal(TemporalType.DATE)
 	@Column(name = "NVO_DATA_EMISSAO")
 	private Date dataEmissao;
-
+    
+    @Temporal(TemporalType.DATE)
 	@Column(name = "NVO_DATA_ENTRADA")
 	private Date dataEntrada;
 
@@ -54,6 +57,9 @@ public class NotaFiscal {
 
 	@Column(name = "NVO_NOME_ARQUIVO")
 	private String nomeArquivo;
+
+	@Column(name = "NVO_ENVIADO")
+	private Integer enviado;
 
 	public Integer getId() {
 		return id;
@@ -149,5 +155,13 @@ public class NotaFiscal {
 
 	public void setNomeArquivo(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
+	}
+
+	public Integer getEnviado() {
+		return enviado;
+	}
+
+	public void setEnviado(Integer enviado) {
+		this.enviado = enviado;
 	}
 }

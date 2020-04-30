@@ -3,11 +3,13 @@ package corp.gruposfa.novo.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import corp.gruposfa.novo.dto.ModeloArquivo;
+import corp.gruposfa.novo.dto.NotaFiscalDTO;
 import corp.gruposfa.novo.model.NotaFiscal;
 import corp.gruposfa.novo.repository.NotaFiscalRepository;
 import corp.gruposfa.novo.service.NotaFiscalService;
@@ -32,6 +34,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 			notaFiscal.setNomeArquivo(modeloArquivo.getNome());
 			notaFiscal.setEmpresa(modeloArquivo.getEmpresa());
 			notaFiscal.setLoja(modeloArquivo.getLoja());
+			notaFiscal.setEnviado(0);
 			NotaFiscal notaFiscalSalva = null;
 			try {
 				notaFiscalSalva = notaFiscalRepository.saveAndFlush(notaFiscal);
@@ -44,6 +47,16 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 				}
 			}
 		}
+	}
+	
+	@Override
+	public List<NotaFiscalDTO> getNotasFiscaisUsuario(Integer usuario) {
+		return notaFiscalRepository.getNotasFiscaisUsuario(usuario).stream().map(x -> new NotaFiscalDTO(x)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void salvar(NotaFiscal notaFiscal) {
+		notaFiscalRepository.saveAndFlush(notaFiscal);
 	}
 
 }
