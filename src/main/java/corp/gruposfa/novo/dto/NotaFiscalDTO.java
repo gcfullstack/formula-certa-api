@@ -18,6 +18,7 @@ public class NotaFiscalDTO {
 	private String nomeFornecedor;
 	private String nomeArquivo;
 	private Integer enviado;
+	private Date dataEnvio;
 	
 	public NotaFiscalDTO(NotaFiscalInterfaceDTO x) {
 		this.id = x.getId();
@@ -33,6 +34,7 @@ public class NotaFiscalDTO {
 		this.nomeFornecedor = x.getNomeFornecedor();
 		this.nomeArquivo = x.getNomeArquivo();
 		this.enviado = x.getEnviado();
+		this.dataEnvio = x.getDataEnvio();
 	}
 
 	public NotaFiscalDTO() {
@@ -118,6 +120,14 @@ public class NotaFiscalDTO {
 		this.enviado = enviado;
 	}
 
+	public Date getDataEnvio() {
+		return dataEnvio;
+	}
+
+	public void setDataEnvio(Date dataEnvio) {
+		this.dataEnvio = dataEnvio;
+	}
+
 	public interface NotaFiscalInterfaceDTO {
 
 		Integer getId();
@@ -133,6 +143,7 @@ public class NotaFiscalDTO {
 		String getNomeFornecedor();
 		String getNomeArquivo();
 		Integer getEnviado();
+		Date getDataEnvio();
 		
 	}
 }

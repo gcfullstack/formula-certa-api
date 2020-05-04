@@ -60,6 +60,10 @@ public class NotaFiscal {
 
 	@Column(name = "NVO_ENVIADO")
 	private Integer enviado;
+	
+	@Column(name = "NVO_DATA_ENVIO")
+	private Date dataEnvio;
+
 
 	public Integer getId() {
 		return id;
@@ -163,5 +167,13 @@ public class NotaFiscal {
 
 	public void setEnviado(Integer enviado) {
 		this.enviado = enviado;
+	}
+
+	public Date getDataEnvio() {
+		return dataEnvio;
+	}
+
+	public void setDataEnvio(Date dataEnvio) {
+		this.dataEnvio = dataEnvio;
 	}
 }
