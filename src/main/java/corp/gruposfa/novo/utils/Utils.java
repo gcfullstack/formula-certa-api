@@ -5,18 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.util.Date;
-
-import org.junit.Test;
 
 public class Utils {
-	
-	@Test 
-	public void oo () {
-		Date minDate = new Date(10800000L);
-	    System.out.println(minDate);
-	}
 	
 	public String retirarCaracteresEspeciais(String str) {	
 		String strFormatada = "";
