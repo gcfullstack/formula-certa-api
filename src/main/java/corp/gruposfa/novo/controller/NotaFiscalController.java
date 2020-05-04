@@ -57,4 +57,20 @@ public class NotaFiscalController {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/enviar")
+	public ResponseEntity enviar(@RequestBody NotaFiscalDTO notaFiscalDTO) {
+		try {
+			if(notaFiscalDTO.getId() != null) {
+				notaFiscalDTO.setEnviado(1);
+				notaFiscalDTO.setDataEnvio(new Date());
+				notaFiscalService.salvar(notaFiscalMapper.toEntity(notaFiscalDTO));
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id da nota enviada é inválido");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
 }
