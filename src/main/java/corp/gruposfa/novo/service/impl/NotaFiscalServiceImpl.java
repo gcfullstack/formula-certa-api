@@ -20,8 +20,8 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 	
 	private final NotaFiscalRepository notaFiscalRepository;
 	
-	//private static final String STORAGE_PATH = "/mnt/sfa-fs-app/api-novo/notasfiscais/";
-	private static final String STORAGE_PATH = "S:/api-novo/notasfiscais/";
+	private static final String STORAGE_PATH = "/mnt/sfa-fs-app/api-novo/notasfiscais/";
+	//private static final String STORAGE_PATH = "S:/api-novo/notasfiscais/";
 	
 	public NotaFiscalServiceImpl(NotaFiscalRepository notaFiscalRepository) {
 		this.notaFiscalRepository = notaFiscalRepository;
