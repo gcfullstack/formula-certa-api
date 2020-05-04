@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import corp.gruposfa.novo.dto.ModeloArquivo;
 import corp.gruposfa.novo.dto.NotaFiscalDTO;
+import corp.gruposfa.novo.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.mapper.NotaFiscalMapper;
 import corp.gruposfa.novo.service.NotaFiscalService;
 
@@ -68,6 +69,15 @@ public class NotaFiscalController {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id da nota enviada é inválido");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+	@PostMapping("/buscar")
+	public ResponseEntity<List<NotaFiscalDTO>> buscar(@RequestBody NotaFiscalFiltroDTO notaFiscalFiltroDTO) {
+		try {
+			return ResponseEntity.ok(notaFiscalService.buscar(notaFiscalFiltroDTO));
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

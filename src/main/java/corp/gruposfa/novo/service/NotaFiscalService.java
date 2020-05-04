@@ -4,6 +4,7 @@ import java.util.List;
 
 import corp.gruposfa.novo.dto.ModeloArquivo;
 import corp.gruposfa.novo.dto.NotaFiscalDTO;
+import corp.gruposfa.novo.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.model.NotaFiscal;
 
 public interface NotaFiscalService {
@@ -14,4 +15,5 @@ public interface NotaFiscalService {
 	
 	void salvar(NotaFiscal notaFiscal);
 	
+	List<NotaFiscalDTO> buscar(NotaFiscalFiltroDTO notaFiscalFiltroDTO);
 }
