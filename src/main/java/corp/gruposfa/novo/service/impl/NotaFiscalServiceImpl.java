@@ -2,6 +2,7 @@ package corp.gruposfa.novo.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 			notaFiscal.setEmpresa(modeloArquivo.getEmpresa());
 			notaFiscal.setLoja(modeloArquivo.getLoja());
 			notaFiscal.setEnviado(0);
+			notaFiscal.setDataUpload(new Date());
 			NotaFiscal notaFiscalSalva = null;
 			try {
 				notaFiscalSalva = notaFiscalRepository.saveAndFlush(notaFiscal);
