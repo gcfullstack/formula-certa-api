@@ -15,6 +15,8 @@ public class NotaFiscalFiltroDTO {
 	private Date dataEnvioFinal;
 	private BigDecimal valorMinimo;
 	private BigDecimal valorMaximo;
+	private Date dataVencimentoInicial;
+	private Date dataVencimentoFinal;
 	
 	public NotaFiscalFiltroDTO() {
 
@@ -98,5 +100,21 @@ public class NotaFiscalFiltroDTO {
 
 	public void setValorMaximo(BigDecimal valorMaximo) {
 		this.valorMaximo = valorMaximo;
+	}
+
+	public Date getDataVencimentoInicial() {
+		return dataVencimentoInicial;
+	}
+
+	public void setDataVencimentoInicial(Date dataVencimentoInicial) {
+		this.dataVencimentoInicial = dataVencimentoInicial;
+	}
+
+	public Date getDataVencimentoFinal() {
+		return dataVencimentoFinal;
+	}
+
+	public void setDataVencimentoFinal(Date dataVencimentoFinal) {
+		this.dataVencimentoFinal = dataVencimentoFinal;
 	}
 }

@@ -74,6 +74,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 		Date minDate = new Date(10800000L);
 		Date maxDate = new Date(4102455600000L);
 		return notaFiscalRepository.getNotasFiscais(notaFiscalFiltroDTO.getEmpresa(), notaFiscalFiltroDTO.getLoja(), 
+				notaFiscalFiltroDTO.getDataVencimentoInicial() != null ? dfData.format(notaFiscalFiltroDTO.getDataVencimentoInicial()) : dfData.format(minDate), notaFiscalFiltroDTO.getDataVencimentoFinal() != null ? dfData.format(notaFiscalFiltroDTO.getDataVencimentoFinal()) : dfData.format(maxDate), 
 				notaFiscalFiltroDTO.getDataEmissaoInicial() != null ? dfData.format(notaFiscalFiltroDTO.getDataEmissaoInicial()) : dfData.format(minDate), notaFiscalFiltroDTO.getDataEmissaoFinal() != null ? dfData.format(notaFiscalFiltroDTO.getDataEmissaoFinal()) : dfData.format(maxDate), 
 				notaFiscalFiltroDTO.getDataEntradaInicial() != null ? dfData.format(notaFiscalFiltroDTO.getDataEntradaInicial()) : dfData.format(minDate), notaFiscalFiltroDTO.getDataEntradaFinal() != null ? dfData.format(notaFiscalFiltroDTO.getDataEntradaFinal()) : dfData.format(maxDate), 
 				notaFiscalFiltroDTO.getDataEnvioInicial() != null ? dfDataHora.format(notaFiscalFiltroDTO.getDataEnvioInicial()) : dfDataHora.format(minDate), notaFiscalFiltroDTO.getDataEnvioFinal() != null ? dfDataHora.format(notaFiscalFiltroDTO.getDataEnvioFinal()) : dfDataHora.format(maxDate), 

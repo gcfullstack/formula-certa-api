@@ -63,7 +63,10 @@ public class NotaFiscal {
 	
 	@Column(name = "NVO_DATA_ENVIO")
 	private Date dataEnvio;
-
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "NVO_DATA_VENCIMENTO")
+	private Date dataVencimento;
 
 	public Integer getId() {
 		return id;
@@ -175,5 +178,13 @@ public class NotaFiscal {
 
 	public void setDataEnvio(Date dataEnvio) {
 		this.dataEnvio = dataEnvio;
+	}
+
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
 	}
 }
