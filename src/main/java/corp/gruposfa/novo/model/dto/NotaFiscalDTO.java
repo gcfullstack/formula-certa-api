@@ -1,4 +1,4 @@
-package corp.gruposfa.novo.dto;
+package corp.gruposfa.novo.model.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;

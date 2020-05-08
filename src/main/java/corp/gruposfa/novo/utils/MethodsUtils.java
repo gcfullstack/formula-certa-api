@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Utils {
+public class MethodsUtils {
 	
 	public String retirarCaracteresEspeciais(String str) {	
 		String strFormatada = "";
@@ -49,4 +49,16 @@ public class Utils {
 		File file = new File(target); 
 		return file.delete();  
 	}
+	
+	public static String capitalizarString(String sentence) {
+        String words[] = sentence.replaceAll("\\s+", " ").trim().split(" ");
+        String newSentence = "";
+        for (String word : words) {
+            for (int i = 0; i < word.length(); i++)
+                newSentence = newSentence + ((i == 0) ? word.substring(i, i + 1).toUpperCase(): 
+                    (i != word.length() - 1) ? word.substring(i, i + 1).toLowerCase() : word.substring(i, i + 1).toLowerCase().toLowerCase() + " ");
+        }
+
+        return newSentence;
+    }
 }

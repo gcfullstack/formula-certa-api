@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import corp.gruposfa.novo.dto.ModeloArquivo;
-import corp.gruposfa.novo.dto.NotaFiscalDTO;
-import corp.gruposfa.novo.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.mapper.NotaFiscalMapper;
+import corp.gruposfa.novo.model.dto.ModeloArquivo;
+import corp.gruposfa.novo.model.dto.NotaFiscalDTO;
+import corp.gruposfa.novo.model.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.service.NotaFiscalService;
 
 @RestController

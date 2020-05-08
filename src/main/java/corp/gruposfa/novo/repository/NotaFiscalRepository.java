@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import corp.gruposfa.novo.dto.NotaFiscalDTO.NotaFiscalInterfaceDTO;
 import corp.gruposfa.novo.model.NotaFiscal;
+import corp.gruposfa.novo.model.dto.NotaFiscalDTO.NotaFiscalInterfaceDTO;
 
 @Repository
 public interface NotaFiscalRepository extends JpaRepository<NotaFiscal,Integer> {

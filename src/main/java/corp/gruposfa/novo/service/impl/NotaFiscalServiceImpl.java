@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
-import corp.gruposfa.novo.dto.ModeloArquivo;
-import corp.gruposfa.novo.dto.NotaFiscalDTO;
-import corp.gruposfa.novo.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.model.NotaFiscal;
+import corp.gruposfa.novo.model.dto.ModeloArquivo;
+import corp.gruposfa.novo.model.dto.NotaFiscalDTO;
+import corp.gruposfa.novo.model.dto.NotaFiscalFiltroDTO;
 import corp.gruposfa.novo.repository.NotaFiscalRepository;
 import corp.gruposfa.novo.service.NotaFiscalService;
-import corp.gruposfa.novo.utils.Utils;
+import corp.gruposfa.novo.utils.MethodsUtils;
 
 @Service
 public class NotaFiscalServiceImpl implements NotaFiscalService{
@@ -51,7 +51,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 				notaFiscalSalva = notaFiscalRepository.saveAndFlush(notaFiscal);
 				String imageDataBytes = modeloArquivo.getBase64().substring(modeloArquivo.getBase64().indexOf(",")+1);
 				InputStream stream = new ByteArrayInputStream(Base64.decodeBase64(imageDataBytes.getBytes()));
-				Utils.saveToFile(stream, STORAGE_PATH + notaFiscalSalva.getId() + ".pdf");
+				MethodsUtils.saveToFile(stream, STORAGE_PATH + notaFiscalSalva.getId() + ".pdf");
 			} catch (Exception e) {
 				if(notaFiscalSalva != null) {
 					notaFiscalRepository.delete(notaFiscalSalva);
