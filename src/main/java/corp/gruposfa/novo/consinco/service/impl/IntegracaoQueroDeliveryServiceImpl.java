@@ -63,10 +63,14 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	@Override
 	public void executarJobIntegracao() {
-		if(!Boolean.valueOf(servicoIntegracaoFeignClient.verificarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY))) {
+		if(Boolean.valueOf(servicoIntegracaoFeignClient.verificarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY))) {
 			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY, Boolean.FALSE);
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
-			integrarDadosQueroDelivery();
+			try {
+				integrarDadosQueroDelivery();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			servicoIntegracaoFeignClient.salvarFimDeExecucaoDeServico(18);
 			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(18,Boolean.TRUE);
 		}
@@ -128,9 +132,13 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras());
 			if(!response.getR()) {
 			    ResponseCategoriaResultDTO categoriaEncontrada = result.stream().filter(x -> x.getNome().equals(produtoDTO.getNomeCategoria())).findFirst().orElse(null);
-				ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.get_id(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
-				produtoQueroDeliveryFeignClient.adicionarProduto(produto);
-				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+				if(categoriaEncontrada != null) {
+					ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.get_id(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
+					produtoQueroDeliveryFeignClient.adicionarProduto(produto);
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+				}else {
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+				}
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO);
 				validarStatusProduto(response.getData(), produtoDTO);

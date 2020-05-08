@@ -8,7 +8,8 @@ public enum TipoLogIntegracaoEnum {
 	ATUALIZAR_ESTOQUE_PRODUTO("Atualizar estoque"),
 	ATUALIZAR_PRECO_PRODUTO("Atualizar preço"),
 	ATUALIZAR_STATUS_PRODUTO("Atualizar status"),
-	ATUALIZAR_DESCRICAO_PRODUTO("Atualizar descrição");
+	ATUALIZAR_DESCRICAO_PRODUTO("Atualizar descrição"),
+	PRODUTO_SEM_CATEGORIA("Produto sem categoria");
 	
 	private String descricao;
 
