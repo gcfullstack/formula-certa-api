@@ -6,6 +6,7 @@ public class ModeloArquivo {
 	private String nome;
 	private Integer empresa;
 	private Integer loja;
+	private String usuario;
 	
 	public String getBase64() {
 		return base64;
@@ -30,5 +31,11 @@ public class ModeloArquivo {
 	}
 	public void setLoja(Integer loja) {
 		this.loja = loja;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 }
