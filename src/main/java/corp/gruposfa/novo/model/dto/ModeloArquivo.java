@@ -1,4 +1,4 @@
-package corp.gruposfa.novo.dto;
+package corp.gruposfa.novo.model.dto;
 
 public class ModeloArquivo {
 
