@@ -45,6 +45,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 			notaFiscal.setLoja(modeloArquivo.getLoja());
 			notaFiscal.setEnviado(0);
 			notaFiscal.setDataUpload(new Date());
+			notaFiscal.setUsuario(modeloArquivo.getUsuario());
 			NotaFiscal notaFiscalSalva = null;
 			try {
 				notaFiscalSalva = notaFiscalRepository.saveAndFlush(notaFiscal);

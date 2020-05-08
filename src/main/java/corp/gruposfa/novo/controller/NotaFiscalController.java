@@ -73,6 +73,22 @@ public class NotaFiscalController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/descartar")
+	public ResponseEntity descartar(@RequestBody NotaFiscalDTO notaFiscalDTO) {
+		try {
+			if(notaFiscalDTO.getId() != null) {
+				notaFiscalDTO.setEnviado(2);
+				notaFiscalDTO.setDataEnvio(new Date());
+				notaFiscalService.salvar(notaFiscalMapper.toEntity(notaFiscalDTO));
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id da nota enviada é inválido");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
 
 	@PostMapping("/buscar")
 	public ResponseEntity<List<NotaFiscalDTO>> buscar(@RequestBody NotaFiscalFiltroDTO notaFiscalFiltroDTO) {
