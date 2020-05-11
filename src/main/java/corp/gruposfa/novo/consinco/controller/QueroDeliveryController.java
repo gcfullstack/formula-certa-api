@@ -19,7 +19,6 @@ public class QueroDeliveryController {
 	
 	@PostMapping("/executar-integracao")
 	public ResponseEntity<?> executarIntegracao() {
-		System.out.println("Iniciou");
 		integracaoQueroDeliveryService.executarJobIntegracao();
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
