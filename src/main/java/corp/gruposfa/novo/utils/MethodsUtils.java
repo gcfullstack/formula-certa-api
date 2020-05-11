@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MethodsUtils {
 	
@@ -61,4 +63,35 @@ public class MethodsUtils {
 
         return newSentence;
     }
+	
+	/**
+	 * Método para formatar um Date em uma String
+	 */
+	public static String formatarDataString(Date data, String formato) {
+		String dataFormatada = null;
+		if (data != null) {
+			SimpleDateFormat format = new SimpleDateFormat(formato);
+			try {
+				dataFormatada = format.format(data);
+			} catch (Exception e) {
+			}
+		}
+		return dataFormatada;
+	}
+	
+	/**
+	 * Método para formatar uma string em Date
+	 */
+	public static Date formatarStringData(String data, String formato) {
+		Date dataFormatada = null;
+		if (data != null) {
+			SimpleDateFormat format = new SimpleDateFormat(formato);
+			try {
+				dataFormatada = format.parse(data);
+			} catch (Exception e) {
+			}
+		}
+		return dataFormatada;
+	}
+
 }

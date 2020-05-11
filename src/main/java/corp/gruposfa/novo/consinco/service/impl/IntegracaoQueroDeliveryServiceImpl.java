@@ -132,13 +132,11 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras());
 			if(!response.getR()) {
 			    ResponseCategoriaResultDTO categoriaEncontrada = result.stream().filter(x -> x.getNome().equals(produtoDTO.getNomeCategoria())).findFirst().orElse(null);
-				if(categoriaEncontrada != null) {
-					ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.get_id(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
+			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada)) {
+			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.get_id(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
 					produtoQueroDeliveryFeignClient.adicionarProduto(produto);
 					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
-				}else {
-					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
-				}
+			    }
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO);
 				validarStatusProduto(response.getData(), produtoDTO);
@@ -180,5 +178,24 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 
 		}
 	}
+
+	private Boolean validarProdutoAntesSalvar(ProdutoDTO produtoDTO, ResponseCategoriaResultDTO categoria) {
+		if(!validarSeProdutoPossuiCategoria(categoria)) {
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+			return Boolean.FALSE;
+		}
+		if(!validarCodigoBarrasDoProduto(produtoDTO)) {
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
 	
+	private Boolean validarSeProdutoPossuiCategoria(ResponseCategoriaResultDTO categoria) {
+		return categoria != null;
+	}
+	
+	private Boolean validarCodigoBarrasDoProduto(ProdutoDTO produtoDTO) {
+		return !produtoDTO.getCodBarras().equals("0");
+	}
 }
