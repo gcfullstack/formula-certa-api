@@ -35,6 +35,9 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 	@Column(name = "HISTORICO")
 	private String historico;
 
+	@Column(name = "NOME_PRODUTO")
+	private String nomeProduto;
+	
 	@Column(name = "COD_BARRAS")
 	private String codBarras;
 
@@ -45,12 +48,13 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 	}
 	
 	public LogIntegracaoQueroDelivery(Date data, TipoLogIntegracaoEnum tipoLog, String historico, String codBarras,
-			String nomeCategoria) {
+			String nomeCategoria, String nomeProduto) {
 		this.data = data;
 		this.tipoLog = tipoLog;
 		this.historico = historico;
 		this.codBarras = codBarras;
 		this.nomeCategoria = nomeCategoria;
+		this.nomeProduto = nomeProduto;
 	}
 
 	public Integer getId() {
@@ -100,4 +104,14 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 	public void setHistorico(String historico) {
 		this.historico = historico;
 	}
+
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
+	}
+	
+	
 }

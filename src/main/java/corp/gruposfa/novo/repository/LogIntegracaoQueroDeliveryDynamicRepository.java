@@ -33,7 +33,7 @@ public class LogIntegracaoQueroDeliveryDynamicRepository {
 		try {
 			StringBuilder consulta = new StringBuilder();
 	
-			consulta.append(" SELECT DATA, TIPO_LOG, COD_BARRAS,NOME_CATEGORIA,HISTORICO FROM NVO_LOG_INTEGRACAO_QUERO_DELIVERY WHERE 1 = 1");
+			consulta.append(" SELECT DATA, TIPO_LOG,NOME_PRODUTO, COD_BARRAS,NOME_CATEGORIA,HISTORICO FROM NVO_LOG_INTEGRACAO_QUERO_DELIVERY WHERE 1 = 1");
 			
 			if(filtro.getHoraFinal() != null) {
 				consulta.append(" AND DATA BETWEEN :dataInicial AND :dataFinal");
@@ -81,9 +81,10 @@ public class LogIntegracaoQueroDeliveryDynamicRepository {
 				ListagemLogIntegracaoDTO modelo = new ListagemLogIntegracaoDTO();
 				modelo.setData((Date) result[0]);
 				modelo.setTipoLog(TipoLogIntegracaoEnum.valueOf((String) result[1]).getDescricao());
-				modelo.setCodBarras((String) result[2]);
-				modelo.setNomeCategoria((String) result[3]);
-				modelo.setHistorico((String) result[4]);
+				modelo.setNomeProduto((String) result[2]);
+				modelo.setCodBarras((String) result[3]);
+				modelo.setNomeCategoria((String) result[4]);
+				modelo.setHistorico((String) result[5]);
 				lista.add(modelo);
 			}
 			
