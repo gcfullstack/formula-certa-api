@@ -14,15 +14,18 @@ public class ListagemLogIntegracaoDTO {
 
 	private String nomeCategoria;
 	
+	private String nomeProduto;
+	
 	public ListagemLogIntegracaoDTO() {
 	}
 
-	public ListagemLogIntegracaoDTO(Date data, String tipoLog, String historico, String codBarras, String nomeCategoria) {
+	public ListagemLogIntegracaoDTO(Date data, String tipoLog, String historico,String nomeProduto, String codBarras, String nomeCategoria) {
 		this.data = data;
 		this.tipoLog = tipoLog;
 		this.historico = historico;
 		this.codBarras = codBarras;
 		this.nomeCategoria = nomeCategoria;
+		this.nomeProduto = nomeProduto;
 	}
 
 	public Date getData() {
@@ -63,6 +66,14 @@ public class ListagemLogIntegracaoDTO {
 
 	public void setNomeCategoria(String nomeCategoria) {
 		this.nomeCategoria = nomeCategoria;
+	}
+
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
 	}
 
 }

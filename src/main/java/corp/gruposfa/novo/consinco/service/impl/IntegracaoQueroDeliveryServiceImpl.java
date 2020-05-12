@@ -100,7 +100,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		for (String nomeCategoria : categoriasParaAdicionar) {
 			if(nomeCategoria != null) {
 				categoriaQueroDeliveryFeignClient.adicionarCategoria(new CategoriaDTO(nomeCategoria,Boolean.TRUE));
-				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + nomeCategoria, null, nomeCategoria));
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + nomeCategoria, null, nomeCategoria,null));
 			}
 		}
 		
@@ -120,7 +120,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		// inativar as categorias que não estão mais no banco da consinco
 		for (CategoriaQueroDeliveryDTO cat : listaParaInativar) {
 			categoriaQueroDeliveryFeignClient.editarCategoria(new CategoriaDTO(cat.getNome(), Boolean.FALSE), cat.getId());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria inativada: " + cat.getNome(), null, cat.getNome()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria inativada: " + cat.getNome(), null, cat.getNome(),null));
 		}
 		
 	}
@@ -135,7 +135,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada)) {
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.get_id(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
 					produtoQueroDeliveryFeignClient.adicionarProduto(produto);
-					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
 			    }
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO);
@@ -151,7 +151,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		Integer estoqueConsinco = produtoBaseConsinco.getQtdEstoqueMenorEmb();
 		if(!estoqueQueroDelivery.equals(produtoBaseConsinco.getQtdEstoqueMenorEmb())) {
 			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoqueConsinco - estoqueQueroDelivery), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + (estoqueConsinco - estoqueQueroDelivery), produtoEncontrado.getCodigoBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
 
 		}
 	}
@@ -159,14 +159,14 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private void validarPrecoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
 		if(produtoBaseConsinco.getPrecoVarejo().compareTo(produtoEncontrado.getPreco()) != 0) {
 			produtoQueroDeliveryFeignClient.atualizarPrecoProduto(new ProdutoAtualizarPrecoDTO(produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getPreco()), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
 		}
 	}
 	
 	private void validarStatusProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
 		if(!produtoBaseConsinco.getStatusVenda().equals(STATUS_ATIVO_CONSINCO)) {
 			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
 		}
 	}
 	
@@ -174,18 +174,18 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		if(!produtoBaseConsinco.getNomeProduto().equals(produtoEncontrado.getDescricao())) {
 			produtoQueroDeliveryFeignClient.atualizarDescricaoProduto(new ProdutoAtualizarDescricaoDTO(produtoBaseConsinco.getNomeProduto()), produtoEncontrado.getCodigoBarras());
 			produtoQueroDeliveryFeignClient.atualizarNomeProduto(new ProdutoAtualizarNomeDTO(MethodsUtils.capitalizarString(produtoBaseConsinco.getNomeProduto())), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_DESCRICAO_PRODUTO,"Nome/Descrição Atualizados. Valor antigo: " + produtoEncontrado.getDescricao() + "/ Valor novo: " + produtoBaseConsinco.getNomeProduto(), produtoEncontrado.getCodigoBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_DESCRICAO_PRODUTO,"Nome/Descrição Atualizados. Valor antigo: " + produtoEncontrado.getDescricao() + "/ Valor novo: " + produtoBaseConsinco.getNomeProduto(), produtoEncontrado.getCodigoBarras(), null,produtoBaseConsinco.getNomeProduto()));
 
 		}
 	}
 
 	private Boolean validarProdutoAntesSalvar(ProdutoDTO produtoDTO, ResponseCategoriaResultDTO categoria) {
 		if(!validarSeProdutoPossuiCategoria(categoria)) {
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
 			return Boolean.FALSE;
 		}
 		if(!validarCodigoBarrasDoProduto(produtoDTO)) {
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
 			return Boolean.FALSE;
 		}
 		return Boolean.TRUE;
