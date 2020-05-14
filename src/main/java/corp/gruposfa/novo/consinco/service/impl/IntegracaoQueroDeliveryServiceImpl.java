@@ -96,13 +96,13 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		List<String> listaQueroDelivery = collect.stream().map(x -> x.getNome()).collect(Collectors.toList());
 		
 		// ativar categorias que estavam inativas e que estao no banco da consinco
-		/*for (String nomeCat: nomesCategoriasConsinco) {
+		for (String nomeCat: nomesCategoriasConsinco) {
 			for (CategoriaQueroDeliveryDTO categoriaQueroDeliveryDTO : collect) {
 				if(nomeCat.equals(categoriaQueroDeliveryDTO.getNome()) && !categoriaQueroDeliveryDTO.getIsAtivo()) {
 					categoriaQueroDeliveryFeignClient.editarCategoria(new CategoriaDTO(categoriaQueroDeliveryDTO.getNome(), Boolean.TRUE), categoriaQueroDeliveryDTO.getId());
 				}
 			}
-		}*/
+		}
 		
 		// filtrar as categorias que ainda não existem no APP Quero Delivery
 		categoriasParaAdicionar.removeAll(listaQueroDelivery);
@@ -130,8 +130,9 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		
 		// excluir as categorias que não estão mais no banco da consinco
 		for (CategoriaQueroDeliveryDTO cat : listaParaInativar) {
-			categoriaQueroDeliveryFeignClient.excluirCategoria(cat.getId());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_CATEGORIA,"Categoria excluída: " + cat.getNome(), null, cat.getNome(),null));
+			categoriaQueroDeliveryFeignClient.editarCategoria(new CategoriaDTO(cat.getNome(), Boolean.FALSE), cat.getId());
+			//categoriaQueroDeliveryFeignClient.excluirCategoria(cat.getId());
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria excluída: " + cat.getNome(), null, cat.getNome(),null));
 		}
 		
 	}
