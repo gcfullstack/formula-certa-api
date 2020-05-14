@@ -21,5 +21,8 @@ public interface CategoriaQueroDeliveryFeignClient {
 	 @RequestMapping(method = RequestMethod.PUT, value="/categoria?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
 	 ResponseCategoriaDTO editarCategoria(@RequestBody CategoriaDTO categoria, @RequestParam("categoriaId") String categoriaId);
 	 
+	 @RequestMapping(method = RequestMethod.DELETE, value="/categoria?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
+	 ResponseCategoriaDTO excluirCategoria(@RequestParam("categoriaId") String categoriaId);
+	 
 
 }

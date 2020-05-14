@@ -51,6 +51,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private final static String STATUS_OCULTO = "OCULTO";
 	
 	private final static String STATUS_ATIVO_CONSINCO = "A";
+	
+	private final static String CATEGORIA_A_CLASSIFICAR = "A CLASSIFICAR";
 
 	public IntegracaoQueroDeliveryServiceImpl(CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,CategoriaService categoriaService,ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient,ProdutoService produtoService,LogIntegracaoQueroDeliveryService logIntegracaoQueroDeliveryService,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient) {
 		this.categoriaQueroDeliveryFeignClient = categoriaQueroDeliveryFeignClient;
@@ -93,12 +95,21 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		List<CategoriaQueroDeliveryDTO> collect = responseQueroDelivery.getData().getResult().stream().map(x -> new CategoriaQueroDeliveryDTO(x.get_id(),x.getNome(),x.getIsAtivo())).collect(Collectors.toList());
 		List<String> listaQueroDelivery = collect.stream().map(x -> x.getNome()).collect(Collectors.toList());
 		
+		// ativar categorias que estavam inativas e que estao no banco da consinco
+		/*for (String nomeCat: nomesCategoriasConsinco) {
+			for (CategoriaQueroDeliveryDTO categoriaQueroDeliveryDTO : collect) {
+				if(nomeCat.equals(categoriaQueroDeliveryDTO.getNome()) && !categoriaQueroDeliveryDTO.getIsAtivo()) {
+					categoriaQueroDeliveryFeignClient.editarCategoria(new CategoriaDTO(categoriaQueroDeliveryDTO.getNome(), Boolean.TRUE), categoriaQueroDeliveryDTO.getId());
+				}
+			}
+		}*/
+		
 		// filtrar as categorias que ainda não existem no APP Quero Delivery
 		categoriasParaAdicionar.removeAll(listaQueroDelivery);
 		
 		// adicionar as categorias que não existem no APP Quero Delivery
 		for (String nomeCategoria : categoriasParaAdicionar) {
-			if(nomeCategoria != null) {
+			if(!nomeCategoria.equals(CATEGORIA_A_CLASSIFICAR)) {
 				categoriaQueroDeliveryFeignClient.adicionarCategoria(new CategoriaDTO(nomeCategoria,Boolean.TRUE));
 				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + nomeCategoria, null, nomeCategoria,null));
 			}
@@ -117,10 +128,10 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			}
 		}
 		
-		// inativar as categorias que não estão mais no banco da consinco
+		// excluir as categorias que não estão mais no banco da consinco
 		for (CategoriaQueroDeliveryDTO cat : listaParaInativar) {
-			categoriaQueroDeliveryFeignClient.editarCategoria(new CategoriaDTO(cat.getNome(), Boolean.FALSE), cat.getId());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria inativada: " + cat.getNome(), null, cat.getNome(),null));
+			categoriaQueroDeliveryFeignClient.excluirCategoria(cat.getId());
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_CATEGORIA,"Categoria excluída: " + cat.getNome(), null, cat.getNome(),null));
 		}
 		
 	}
@@ -188,14 +199,23 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
 			return Boolean.FALSE;
 		}
+		
+		if(!validarPrecoDoProduto(produtoDTO)) {
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_PRECO_ZERADO,"Produto sem preço encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
+			return Boolean.FALSE;
+		}
 		return Boolean.TRUE;
 	}
 	
 	private Boolean validarSeProdutoPossuiCategoria(ResponseCategoriaResultDTO categoria) {
-		return categoria != null;
+		return categoria != null && !categoria.getNome().equals(CATEGORIA_A_CLASSIFICAR);
 	}
 	
 	private Boolean validarCodigoBarrasDoProduto(ProdutoDTO produtoDTO) {
 		return !produtoDTO.getCodBarras().equals("0");
+	}
+	
+	private Boolean validarPrecoDoProduto(ProdutoDTO produtoDTO) {
+		return produtoDTO.getPrecoVarejo() != null && produtoDTO.getPrecoVarejo().compareTo(BigDecimal.ZERO) > 0;
 	}
 }
