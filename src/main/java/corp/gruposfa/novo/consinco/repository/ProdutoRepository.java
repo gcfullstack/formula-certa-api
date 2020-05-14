@@ -12,7 +12,7 @@ import corp.gruposfa.novo.model.NotaFiscal;
 @Repository
 public interface ProdutoRepository extends JpaRepository<NotaFiscal,Integer>{
 	
-	@Query(value = "SELECT * FROM BI_V_DADOS_QUERODELIVERY where cod_loja = 1", nativeQuery = true)
+	@Query(value = "SELECT * FROM BI_V_DADOS_QUERODELIVERY where cod_loja = 2", nativeQuery = true)
 	List<ProdutoInterfaceDTO> buscarProdutos();
 	
 }
