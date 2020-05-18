@@ -72,8 +72,6 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	@Override
 	public void executarJobIntegracao() {
-		integrarCategoria();
-		integrarProduto();
 		if(Boolean.valueOf(servicoIntegracaoFeignClient.verificarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY))) {
 			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY, Boolean.FALSE);
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
