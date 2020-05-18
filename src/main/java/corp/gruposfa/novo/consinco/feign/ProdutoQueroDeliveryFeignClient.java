@@ -13,6 +13,7 @@ import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarPrecoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarStatusDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoCadastroQueroDeliveryDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseProdutoDTO;
+import corp.gruposfa.novo.consinco.model.dto.ResponseTodosProdutosDTO;
 
 @FeignClient(name = "produtoQueroDeliveryFeignClient", url = "${application.quero-delivery.url-api}")
 public interface ProdutoQueroDeliveryFeignClient {
@@ -40,5 +41,11 @@ public interface ProdutoQueroDeliveryFeignClient {
 	 
 	 @RequestMapping(method = RequestMethod.GET, value="/produto/estoque?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
 	 ResponseProdutoDTO buscarEstoque(@RequestParam("codigoBarras") String codigoBarras);
+	 
+	 @RequestMapping(method = RequestMethod.GET, value="/produto?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
+	 ResponseTodosProdutosDTO buscarProdutos(@RequestParam("offset") Integer offset,@RequestParam("limit") Integer limit);
+	 
+	 @RequestMapping(method = RequestMethod.DELETE, value="/produto?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
+	 ResponseProdutoDTO excluirProdutoPorCodigoBarras(@RequestParam("codigoBarras") String codigoBarras);
 	 
 }
