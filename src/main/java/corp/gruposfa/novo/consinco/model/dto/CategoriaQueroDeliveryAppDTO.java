@@ -1,6 +1,6 @@
 package corp.gruposfa.novo.consinco.model.dto;
 
-public class CategoriaQueroDeliveryDTO {
+public class CategoriaQueroDeliveryAppDTO {
 
 	private String id;
 
@@ -8,11 +8,11 @@ public class CategoriaQueroDeliveryDTO {
 
 	private Boolean isAtivo;
 	
-	public CategoriaQueroDeliveryDTO() {
+	public CategoriaQueroDeliveryAppDTO() {
 		super();
 	}
 	
-	public CategoriaQueroDeliveryDTO(String id, String nome, Boolean isAtivo) {
+	public CategoriaQueroDeliveryAppDTO(String id, String nome, Boolean isAtivo) {
 		this.id = id;
 		this.nome = nome;
 		this.isAtivo = isAtivo;
