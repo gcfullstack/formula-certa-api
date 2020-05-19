@@ -23,7 +23,7 @@ application:
     quero-delivery:
         url-api: https://stageapi.quero.io
         token: Basic bm92b2F0YWNhcmVqbzpub3ZvYXRhY2FyZWpv
-        place-id: 5eb1bb5b1b7d4c001ceddb91
+        place-id: 5ebbdead910213001cb3a77d
     url-apis:
         url-servico-parametros-integracao: http://api-portal.gruposfa.com.br/sfaservicos/rest/parametros-integracao/servicos        
 server:
