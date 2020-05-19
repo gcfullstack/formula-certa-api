@@ -155,6 +155,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			List<ResponseProdutoDadoDTO> produtosParaExcluir = listaProdutos.stream().filter(x -> x.getProdutoCategoriaId().equals(categoriaSalva.getCodCategoriaQueroDelivery())).collect(Collectors.toList());
 			for (ResponseProdutoDadoDTO p : produtosParaExcluir) {
 				produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(p.getCodigoBarras());
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + p.getNome(),p.getCodigoBarras(), null,p.getNome()));
+
 			}
 			categoriaQueroDeliveryFeignClient.excluirCategoria(categoriaSalva.getCodCategoriaQueroDelivery());
 			categoriaQueroDeliveryService.excluirRegistroPorCodCategoriaConsinco(cat.getCodCategoria());
@@ -164,6 +166,33 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	}
 	
 	private void integrarProduto() {
+		removerProdutos();
+		salvarProduto();
+	}
+	
+	private void removerProdutos() {
+		List<ProdutoDTO> listaProdutosConsinco = produtoService.buscarInformacoesIntegracaoProduto();
+		List<ResponseProdutoDadoDTO> listaProdutosQueroDelivery = buscarTodosProdutos();
+		Boolean encontrou = Boolean.FALSE;
+		for (ResponseProdutoDadoDTO prodQueroDelivery : listaProdutosQueroDelivery) {
+			for (ProdutoDTO prodConsinco : listaProdutosConsinco) {
+				if(prodQueroDelivery.getCodigoInterno().equals(prodConsinco.getCodProduto().toString())) {
+					encontrou = Boolean.TRUE;
+					break;
+				}
+			}
+			
+			if(!encontrou) {
+				if(produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(prodQueroDelivery.getCodigoBarras()).getR()) {
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + prodQueroDelivery.getNome(),prodQueroDelivery.getCodigoBarras(), null,prodQueroDelivery.getNome()));
+				}
+
+			}
+			encontrou = Boolean.FALSE;
+		}
+	}
+	
+	private void salvarProduto() {
 		List<ProdutoDTO> listaProdutos = produtoService.buscarInformacoesIntegracaoProduto();
 		for (ProdutoDTO produtoDTO : listaProdutos) {
 			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras());
@@ -171,8 +200,11 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 				CategoriaQueroDeliveryDTO categoriaEncontrada = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(produtoDTO.getCodCategoria());
 			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada)) {
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.getCodCategoriaQueroDelivery(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
-					produtoQueroDeliveryFeignClient.adicionarProduto(produto);
-					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
+					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto).getR()) {
+						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
+					}else {
+						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
+					}
 			    }
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO);
