@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import corp.gruposfa.novo.consinco.model.dto.ProdutoAlterarControlaEstoqueDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarDescricaoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarEstoqueDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarNomeDTO;
@@ -47,5 +48,8 @@ public interface ProdutoQueroDeliveryFeignClient {
 	 
 	 @RequestMapping(method = RequestMethod.DELETE, value="/produto?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
 	 ResponseProdutoDTO excluirProdutoPorCodigoBarras(@RequestParam("codigoBarras") String codigoBarras);
+	 
+	 @RequestMapping(method = RequestMethod.PUT, value="/produto/controla-estoque?placeId=${application.quero-delivery.place-id}", headers = {"authorization=${application.quero-delivery.token}", "User-Agent=api-novo"})
+	 ResponseProdutoDTO alterarControlaEstoque(@RequestBody ProdutoAlterarControlaEstoqueDTO dto,@RequestParam("codigoBarras") String codigoBarras);
 	 
 }

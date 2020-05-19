@@ -13,6 +13,7 @@ import corp.gruposfa.novo.consinco.feign.CategoriaQueroDeliveryFeignClient;
 import corp.gruposfa.novo.consinco.feign.ProdutoQueroDeliveryFeignClient;
 import corp.gruposfa.novo.consinco.model.dto.CategoriaCompareDTO;
 import corp.gruposfa.novo.consinco.model.dto.CategoriaDTO;
+import corp.gruposfa.novo.consinco.model.dto.ProdutoAlterarControlaEstoqueDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarDescricaoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarEstoqueDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarNomeDTO;
@@ -201,6 +202,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada)) {
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.getCodCategoriaQueroDelivery(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
 					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto).getR()) {
+						produtoQueroDeliveryFeignClient.alterarControlaEstoque(new ProdutoAlterarControlaEstoqueDTO(Boolean.TRUE), produto.getCodigoBarras());
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
 					}else {
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
@@ -219,7 +221,9 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		Integer estoqueQueroDelivery = produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras()).getData().getProduto().getQtdEstoque();
 		Integer estoqueConsinco = produtoBaseConsinco.getQtdEstoqueMenorEmb();
 		if(!estoqueQueroDelivery.equals(produtoBaseConsinco.getQtdEstoqueMenorEmb())) {
-			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoqueConsinco - estoqueQueroDelivery), produtoEncontrado.getCodigoBarras());
+			Integer estoque = estoqueConsinco - estoqueQueroDelivery;
+			estoque = estoque > 0 ? estoque : 0;
+			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoEncontrado.getCodigoBarras());
 			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
 
 		}
