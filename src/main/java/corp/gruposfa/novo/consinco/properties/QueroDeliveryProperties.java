@@ -5,34 +5,65 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("application.quero-delivery")
 public class QueroDeliveryProperties {
 
-	private String urlApi;
+	private String urlApiProd;
 
-	private String token;
+	private String tokenProd;
 
-	private String placeId;
+	private String placeIdProd;
+	
+	private String urlApiHml;
+	
+	private String tokenHml;
+	
+	private String placeIdHml;
 
-	public String getUrlApi() {
-		return urlApi;
+	public String getTokenProd() {
+		return tokenProd;
 	}
 
-	public void setUrlApi(String urlApi) {
-		this.urlApi = urlApi;
+	public void setTokenProd(String tokenProd) {
+		this.tokenProd = tokenProd;
 	}
 
-	public String getToken() {
-		return token;
+	public String getPlaceIdProd() {
+		return placeIdProd;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setPlaceIdProd(String placeIdProd) {
+		this.placeIdProd = placeIdProd;
 	}
 
-	public String getPlaceId() {
-		return placeId;
+	public String getTokenHml() {
+		return tokenHml;
 	}
 
-	public void setPlaceId(String placeId) {
-		this.placeId = placeId;
+	public void setTokenHml(String tokenHml) {
+		this.tokenHml = tokenHml;
 	}
 
+	public String getPlaceIdHml() {
+		return placeIdHml;
+	}
+
+	public void setPlaceIdHml(String placeIdHml) {
+		this.placeIdHml = placeIdHml;
+	}
+
+	public String getUrlApiProd() {
+		return urlApiProd;
+	}
+
+	public void setUrlApiProd(String urlApiProd) {
+		this.urlApiProd = urlApiProd;
+	}
+
+	public String getUrlApiHml() {
+		return urlApiHml;
+	}
+
+	public void setUrlApiHml(String urlApiHml) {
+		this.urlApiHml = urlApiHml;
+	}
+	
+	
 }

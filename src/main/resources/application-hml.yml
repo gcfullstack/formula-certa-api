@@ -21,9 +21,12 @@ spring:
             format_sql: true
 application:
     quero-delivery:
-        url-api: https://stageapi.quero.io
-        token: Basic bm92b2F0YWNhcmVqbzpub3ZvYXRhY2FyZWpv
-        place-id: 5ebbdead910213001cb3a77d
+        url-api-hml: https://stageapi.quero.io
+        url-api-prod: https://api.quero.io
+        token-hml: Basic bm92b2F0YWNhcmVqbzpub3ZvYXRhY2FyZWpv
+        place-id-hml: 5ebbdead910213001cb3a77d
+        token-prod: Basic bm92b2F0YWNhcmVqbzpwYXNzd2Rub3ZvYXRhYw==
+        place-id-prod: 5e988d39517ce60141182af6
     url-apis:
         url-servico-parametros-integracao: http://api-portal.gruposfa.com.br/sfaservicos/rest/parametros-integracao/servicos    
 server:

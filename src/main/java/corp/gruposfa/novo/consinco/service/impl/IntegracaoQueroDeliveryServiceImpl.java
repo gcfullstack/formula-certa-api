@@ -1,6 +1,7 @@
 package corp.gruposfa.novo.consinco.service.impl;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import corp.gruposfa.novo.consinco.feign.CategoriaQueroDeliveryFeignClient;
 import corp.gruposfa.novo.consinco.feign.ProdutoQueroDeliveryFeignClient;
 import corp.gruposfa.novo.consinco.model.dto.CategoriaCompareDTO;
 import corp.gruposfa.novo.consinco.model.dto.CategoriaDTO;
+import corp.gruposfa.novo.consinco.model.dto.ParametrizacaoAmbienteDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAlterarControlaEstoqueDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarDescricaoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarEstoqueDTO;
@@ -22,10 +24,11 @@ import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarStatusDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoCadastroQueroDeliveryDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseAddCategoriaDTO;
-import corp.gruposfa.novo.consinco.model.dto.ResponseCategoriaResultDTO;
+import corp.gruposfa.novo.consinco.model.dto.ResponseCategoriaDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseProdutoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseProdutoDadoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseTodosProdutosDTO;
+import corp.gruposfa.novo.consinco.properties.QueroDeliveryProperties;
 import corp.gruposfa.novo.consinco.service.CategoriaService;
 import corp.gruposfa.novo.consinco.service.IntegracaoQueroDeliveryService;
 import corp.gruposfa.novo.consinco.service.LogIntegracaoQueroDeliveryService;
@@ -60,8 +63,14 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private final static String STATUS_ATIVO_CONSINCO = "A";
 	
 	private final static String CATEGORIA_A_CLASSIFICAR = "A CLASSIFICAR";
+	
+	private final static String AMBIENTE_PROD = "PROD";
+	
+	private final static String AMBIENTE_HML = "HML";
+	
+	private final QueroDeliveryProperties queroDeliveryProperties;
 
-	public IntegracaoQueroDeliveryServiceImpl(CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,CategoriaService categoriaService,ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient,ProdutoService produtoService,LogIntegracaoQueroDeliveryService logIntegracaoQueroDeliveryService,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient,CategoriaQueroDeliveryService categoriaQueroDeliveryService) {
+	public IntegracaoQueroDeliveryServiceImpl(CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,CategoriaService categoriaService,ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient,ProdutoService produtoService,LogIntegracaoQueroDeliveryService logIntegracaoQueroDeliveryService,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient,CategoriaQueroDeliveryService categoriaQueroDeliveryService,QueroDeliveryProperties queroDeliveryProperties) {
 		this.categoriaQueroDeliveryFeignClient = categoriaQueroDeliveryFeignClient;
 		this.categoriaService = categoriaService;
 		this.produtoQueroDeliveryFeignClient = produtoQueroDeliveryFeignClient;
@@ -69,6 +78,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		this.logIntegracaoQueroDeliveryService = logIntegracaoQueroDeliveryService;
 		this.servicoIntegracaoFeignClient = servicoIntegracaoFeignClient;
 		this.categoriaQueroDeliveryService = categoriaQueroDeliveryService;
+		this.queroDeliveryProperties = queroDeliveryProperties;
 	}
 	
 	@Override
@@ -77,7 +87,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY, Boolean.FALSE);
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
 			try {
-				integrarDadosQueroDelivery();
+				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdProd(),queroDeliveryProperties.getTokenProd(),AMBIENTE_PROD, queroDeliveryProperties.getUrlApiProd()));
+				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -87,20 +98,20 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	}
 	
 	@Override
-	public void integrarDadosQueroDelivery() {
-		integrarCategoria();
-		integrarProduto();
+	public void integrarDadosQueroDelivery(ParametrizacaoAmbienteDTO param) {
+		integrarCategoria(param);
+		integrarProduto(param);
 	}
 	
-	private void integrarCategoria() {
-		salvarCategorias();
-		removerCategorias();
+	private void integrarCategoria(ParametrizacaoAmbienteDTO param) {
+		salvarCategorias(param);
+		removerCategorias(param);
 	}
 	
-	private void salvarCategorias() {
+	private void salvarCategorias(ParametrizacaoAmbienteDTO param) {
 		// ADICIONAR CATEGORIAS
 		List<CategoriaCompareDTO> categoriasConsinco = categoriaService.buscarCategorias();
-		List<CategoriaCompareDTO> categoriasSalvas = categoriaQueroDeliveryService.buscarRegistros();
+		List<CategoriaCompareDTO> categoriasSalvas = categoriaQueroDeliveryService.buscarRegistros(param.getAmbiente());
 		List<CategoriaCompareDTO> categoriasParaAdicionar = new ArrayList<>();
 		Boolean categoriaJaExistente = Boolean.FALSE;
 		
@@ -120,16 +131,16 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		
 		for (CategoriaCompareDTO categoria : categoriasParaAdicionar) {
 			if(!categoria.getNomeCategoria().equals(CATEGORIA_A_CLASSIFICAR)) {
-				ResponseAddCategoriaDTO categoriaSalvaNoAPP = categoriaQueroDeliveryFeignClient.adicionarCategoria(new CategoriaDTO(categoria.getNomeCategoria(),Boolean.TRUE));
-				categoriaQueroDeliveryService.salvarRegistro(new CategoriaQueroDelivery(categoria.getNomeCategoria(), categoria.getCodCategoria(), categoriaSalvaNoAPP.getData().get_id()));
-				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + categoria.getNomeCategoria(), null, categoria.getNomeCategoria(),null));
+				ResponseAddCategoriaDTO categoriaSalvaNoAPP = categoriaQueroDeliveryFeignClient.adicionarCategoria(new CategoriaDTO(categoria.getNomeCategoria(),Boolean.TRUE),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+				categoriaQueroDeliveryService.salvarRegistro(new CategoriaQueroDelivery(categoria.getNomeCategoria(), categoria.getCodCategoria(), categoriaSalvaNoAPP.getData().get_id(), param.getAmbiente()));
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + categoria.getNomeCategoria(), null, categoria.getNomeCategoria(),null,param.getAmbiente()));
 			}
 		}
 	}
 	
-	private void removerCategorias() {
+	private void removerCategorias(ParametrizacaoAmbienteDTO param) {
 		List<CategoriaCompareDTO> categoriasConsinco =  categoriaService.buscarCategorias();
-		List<CategoriaCompareDTO> categoriasSalvas = categoriaQueroDeliveryService.buscarRegistros();
+		List<CategoriaCompareDTO> categoriasSalvas = categoriaQueroDeliveryService.buscarRegistros(param.getAmbiente());
 		List<CategoriaCompareDTO> categoriasParaRemover = new ArrayList<>();
 		Boolean categoriaExistente = Boolean.FALSE;
 		
@@ -147,33 +158,33 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			categoriaExistente = Boolean.FALSE;
 		}
 		
-		List<ResponseProdutoDadoDTO> listaProdutos = categoriasParaRemover.size() > 0 ? buscarTodosProdutos() : null;
+		List<ResponseProdutoDadoDTO> listaProdutos = categoriasParaRemover.size() > 0 ? buscarTodosProdutos(param) : null;
 		
 		// excluir as categorias que não estão mais no banco da consinco
 		
 		for (CategoriaCompareDTO cat : categoriasParaRemover) {
-			CategoriaQueroDeliveryDTO categoriaSalva = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(cat.getCodCategoria());
+			CategoriaQueroDeliveryDTO categoriaSalva = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(cat.getCodCategoria(),param.getAmbiente());
 			List<ResponseProdutoDadoDTO> produtosParaExcluir = listaProdutos.stream().filter(x -> x.getProdutoCategoriaId().equals(categoriaSalva.getCodCategoriaQueroDelivery())).collect(Collectors.toList());
 			for (ResponseProdutoDadoDTO p : produtosParaExcluir) {
-				produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(p.getCodigoBarras());
-				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + p.getNome(),p.getCodigoBarras(), null,p.getNome()));
+				produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(p.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + p.getNome(),p.getCodigoBarras(), null,p.getNome(),param.getAmbiente()));
 
 			}
-			categoriaQueroDeliveryFeignClient.excluirCategoria(categoriaSalva.getCodCategoriaQueroDelivery());
-			categoriaQueroDeliveryService.excluirRegistroPorCodCategoriaConsinco(cat.getCodCategoria());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria excluída: " + cat.getNomeCategoria(), null, cat.getNomeCategoria(),null));
+			categoriaQueroDeliveryFeignClient.excluirCategoria(categoriaSalva.getCodCategoriaQueroDelivery(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			categoriaQueroDeliveryService.excluirRegistroPorCodCategoriaConsinco(cat.getCodCategoria(),param.getAmbiente());
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.INATIVAR_CATEGORIA,"Categoria excluída: " + cat.getNomeCategoria(), null, cat.getNomeCategoria(),null,param.getAmbiente()));
 		}
 		
 	}
 	
-	private void integrarProduto() {
-		removerProdutos();
-		salvarProduto();
+	private void integrarProduto(ParametrizacaoAmbienteDTO param) {
+		removerProdutos(param);
+		salvarProduto(param);
 	}
 	
-	private void removerProdutos() {
+	private void removerProdutos(ParametrizacaoAmbienteDTO param) {
 		List<ProdutoDTO> listaProdutosConsinco = produtoService.buscarInformacoesIntegracaoProduto();
-		List<ResponseProdutoDadoDTO> listaProdutosQueroDelivery = buscarTodosProdutos();
+		List<ResponseProdutoDadoDTO> listaProdutosQueroDelivery = buscarTodosProdutos(param);
 		Boolean encontrou = Boolean.FALSE;
 		for (ResponseProdutoDadoDTO prodQueroDelivery : listaProdutosQueroDelivery) {
 			for (ProdutoDTO prodConsinco : listaProdutosConsinco) {
@@ -184,8 +195,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			}
 			
 			if(!encontrou) {
-				if(produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(prodQueroDelivery.getCodigoBarras()).getR()) {
-					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + prodQueroDelivery.getNome(),prodQueroDelivery.getCodigoBarras(), null,prodQueroDelivery.getNome()));
+				if(produtoQueroDeliveryFeignClient.excluirProdutoPorCodigoBarras(prodQueroDelivery.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getR()) {
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.EXCLUIR_PRODUTO,"Produto excluído: " + prodQueroDelivery.getNome(),prodQueroDelivery.getCodigoBarras(), null,prodQueroDelivery.getNome(),param.getAmbiente()));
 				}
 
 			}
@@ -193,77 +204,76 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		}
 	}
 	
-	private void salvarProduto() {
+	private void salvarProduto(ParametrizacaoAmbienteDTO param) {
 		List<ProdutoDTO> listaProdutos = produtoService.buscarInformacoesIntegracaoProduto();
 		for (ProdutoDTO produtoDTO : listaProdutos) {
-			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras());
+			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
 			if(!response.getR()) {
-				CategoriaQueroDeliveryDTO categoriaEncontrada = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(produtoDTO.getCodCategoria());
-			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada)) {
+				CategoriaQueroDeliveryDTO categoriaEncontrada = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(produtoDTO.getCodCategoria(),param.getAmbiente());
+			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada,param.getAmbiente())) {
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.getCodCategoriaQueroDelivery(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
-					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto).getR()) {
-						produtoQueroDeliveryFeignClient.alterarControlaEstoque(new ProdutoAlterarControlaEstoqueDTO(Boolean.TRUE), produto.getCodigoBarras());
-						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
+					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto,param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getR()) {
+						produtoQueroDeliveryFeignClient.alterarControlaEstoque(new ProdutoAlterarControlaEstoqueDTO(Boolean.TRUE), produto.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente()));
 					}else {
-						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto()));
+						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente()));
 					}
 			    }
 			}else {
-				validarPrecoProduto(response.getData(), produtoDTO);
-				validarStatusProduto(response.getData(), produtoDTO);
-				validarNomeEDescricaoProduto(response.getData(), produtoDTO);
-				atualizarEstoqueProduto(response.getData(),produtoDTO);
+				validarPrecoProduto(response.getData(), produtoDTO, param);
+				validarStatusProduto(response.getData(), produtoDTO, param);
+				validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
+				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
 			}
 		}
 	}
-	
-	private void atualizarEstoqueProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
-		Integer estoqueQueroDelivery = produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras()).getData().getProduto().getQtdEstoque();
+
+	private void atualizarEstoqueProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
+		Integer estoqueQueroDelivery = produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getData().getProduto().getQtdEstoque();
 		Integer estoqueConsinco = produtoBaseConsinco.getQtdEstoqueMenorEmb();
 		if(!estoqueQueroDelivery.equals(produtoBaseConsinco.getQtdEstoqueMenorEmb())) {
 			Integer estoque = estoqueConsinco - estoqueQueroDelivery;
 			estoque = estoque > 0 ? estoque : 0;
-			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
-
+			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(),param.getAmbiente()));
 		}
 	}
 	
-	private void validarPrecoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
+	private void validarPrecoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		if(produtoBaseConsinco.getPrecoVarejo().compareTo(produtoEncontrado.getPreco()) != 0) {
-			produtoQueroDeliveryFeignClient.atualizarPrecoProduto(new ProdutoAtualizarPrecoDTO(produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getPreco()), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
+			produtoQueroDeliveryFeignClient.atualizarPrecoProduto(new ProdutoAtualizarPrecoDTO(produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getPreco()), produtoEncontrado.getCodigoBarras(), param.getPlaceId(), param.getToken(),URI.create(param.getUrl()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente()));
 		}
 	}
 	
-	private void validarStatusProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
+	private void validarStatusProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		if(!produtoBaseConsinco.getStatusVenda().equals(STATUS_ATIVO_CONSINCO)) {
-			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome()));
+			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente()));
 		}
 	}
 	
-	private void validarNomeEDescricaoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco) {
+	private void validarNomeEDescricaoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		if(!produtoBaseConsinco.getNomeProduto().equals(produtoEncontrado.getDescricao())) {
-			produtoQueroDeliveryFeignClient.atualizarDescricaoProduto(new ProdutoAtualizarDescricaoDTO(produtoBaseConsinco.getNomeProduto()), produtoEncontrado.getCodigoBarras());
-			produtoQueroDeliveryFeignClient.atualizarNomeProduto(new ProdutoAtualizarNomeDTO(MethodsUtils.capitalizarString(produtoBaseConsinco.getNomeProduto())), produtoEncontrado.getCodigoBarras());
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_DESCRICAO_PRODUTO,"Nome/Descrição Atualizados. Valor antigo: " + produtoEncontrado.getDescricao() + "/ Valor novo: " + produtoBaseConsinco.getNomeProduto(), produtoEncontrado.getCodigoBarras(), null,produtoBaseConsinco.getNomeProduto()));
+			produtoQueroDeliveryFeignClient.atualizarDescricaoProduto(new ProdutoAtualizarDescricaoDTO(produtoBaseConsinco.getNomeProduto()), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			produtoQueroDeliveryFeignClient.atualizarNomeProduto(new ProdutoAtualizarNomeDTO(MethodsUtils.capitalizarString(produtoBaseConsinco.getNomeProduto())), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_DESCRICAO_PRODUTO,"Nome/Descrição Atualizados. Valor antigo: " + produtoEncontrado.getDescricao() + "/ Valor novo: " + produtoBaseConsinco.getNomeProduto(), produtoEncontrado.getCodigoBarras(), null,produtoBaseConsinco.getNomeProduto(),param.getAmbiente()));
 
 		}
 	}
 
-	private Boolean validarProdutoAntesSalvar(ProdutoDTO produtoDTO, CategoriaQueroDeliveryDTO categoria) {
+	private Boolean validarProdutoAntesSalvar(ProdutoDTO produtoDTO, CategoriaQueroDeliveryDTO categoria, String ambiente) {
 		if(!validarSeProdutoPossuiCategoria(categoria)) {
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_CATEGORIA,"Produto sem categoria encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto(),ambiente));
 			return Boolean.FALSE;
 		}
 		if(!validarCodigoBarrasDoProduto(produtoDTO)) {
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_COD_BARRAS,"Produto sem código de barras encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto(),ambiente));
 			return Boolean.FALSE;
 		}
 		
 		if(!validarPrecoDoProduto(produtoDTO)) {
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_PRECO_ZERADO,"Produto sem preço encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto()));
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_PRECO_ZERADO,"Produto sem preço encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto(),ambiente));
 			return Boolean.FALSE;
 		}
 		return Boolean.TRUE;
@@ -281,12 +291,12 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		return produtoDTO.getPrecoVarejo() != null && produtoDTO.getPrecoVarejo().compareTo(BigDecimal.ZERO) > 0;
 	}
 	
-	private List<ResponseProdutoDadoDTO> buscarTodosProdutos(){
+	private List<ResponseProdutoDadoDTO> buscarTodosProdutos(ParametrizacaoAmbienteDTO param){
 		List<ResponseProdutoDadoDTO> list = new ArrayList<>();
 		ResponseTodosProdutosDTO response = null;
 		Integer offset = 0;
 		while(true) {
-			response = produtoQueroDeliveryFeignClient.buscarProdutos(offset, 50);
+			response = produtoQueroDeliveryFeignClient.buscarProdutos(offset, 50, param.getPlaceId(), param.getToken(),URI.create(param.getUrl()));
 			if(response.getData() == null) {
 				break;
 			}
