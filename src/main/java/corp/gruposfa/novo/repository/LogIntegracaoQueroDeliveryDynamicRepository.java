@@ -33,7 +33,7 @@ public class LogIntegracaoQueroDeliveryDynamicRepository {
 		try {
 			StringBuilder consulta = new StringBuilder();
 	
-			consulta.append(" SELECT DATA, TIPO_LOG,NOME_PRODUTO, COD_BARRAS,NOME_CATEGORIA,HISTORICO FROM NVO_LOG_INTEGRACAO_QUERO_DELIVERY WHERE 1 = 1");
+			consulta.append(" SELECT DATA, TIPO_LOG,NOME_PRODUTO, COD_BARRAS,NOME_CATEGORIA,HISTORICO FROM NVO_LOG_INTEGRACAO_QUERO_DELIVERY WHERE AMBIENTE = 'PROD' ");
 			
 			if(filtro.getHoraFinal() != null) {
 				consulta.append(" AND DATA BETWEEN :dataInicial AND :dataFinal");

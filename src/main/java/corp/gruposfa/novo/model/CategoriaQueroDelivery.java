@@ -27,14 +27,19 @@ public class CategoriaQueroDelivery {
 	@Column(name = "COD_CATEGORIA_QUERO_DELIVERY")
 	private String codCategoriaQueroDelivery;
 	
+	@Column(name = "AMBIENTE")
+	private String ambiente;
+	
+	
 	public CategoriaQueroDelivery() {
 	}
 
 	public CategoriaQueroDelivery(String nomeCategoria, Integer codCategoriaConsinco,
-			String codCategoriaQueroDelivery) {
+			String codCategoriaQueroDelivery, String ambiente) {
 		this.nomeCategoria = nomeCategoria;
 		this.codCategoriaConsinco = codCategoriaConsinco;
 		this.codCategoriaQueroDelivery = codCategoriaQueroDelivery;
+		this.ambiente = ambiente;
 	}
 
 	public Integer getId() {
@@ -67,6 +72,14 @@ public class CategoriaQueroDelivery {
 
 	public void setCodCategoriaQueroDelivery(String codCategoriaQueroDelivery) {
 		this.codCategoriaQueroDelivery = codCategoriaQueroDelivery;
+	}
+
+	public String getAmbiente() {
+		return ambiente;
+	}
+
+	public void setAmbiente(String ambiente) {
+		this.ambiente = ambiente;
 	}
 	
 }

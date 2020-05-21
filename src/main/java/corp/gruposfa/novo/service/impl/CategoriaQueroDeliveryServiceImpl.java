@@ -25,23 +25,19 @@ public class CategoriaQueroDeliveryServiceImpl implements CategoriaQueroDelivery
 	}
 
 	@Override
-	public List<CategoriaCompareDTO> buscarRegistros() {
-		return categoriaQueroDeliveryRepository.buscarRegistros();
+	public List<CategoriaCompareDTO> buscarRegistros(String ambiente) {
+		return categoriaQueroDeliveryRepository.buscarRegistros(ambiente);
 	}
 
 	@Override
-	public CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(Integer codCategoria) {
-		return categoriaQueroDeliveryRepository.buscarRegistroPorCodCategoriaConsinco(codCategoria);
+	public CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(Integer codCategoria, String ambiente) {
+		return categoriaQueroDeliveryRepository.buscarRegistroPorCodCategoriaConsinco(codCategoria,ambiente);
 	}
 
 	@Override
-	public void excluirRegistroPorCodCategoriaConsinco(Integer codCategoria) {
-		categoriaQueroDeliveryRepository.excluirRegistroPorCodCategoriaConsinco(codCategoria);
+	public void excluirRegistroPorCodCategoriaConsinco(Integer codCategoria, String ambiente) {
+		categoriaQueroDeliveryRepository.excluirRegistroPorCodCategoriaConsinco(codCategoria,ambiente);
 	}
 
-	@Override
-	public CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaQueroDelivery(String codCategoria) {
-		return categoriaQueroDeliveryRepository.buscarRegistroPorCodCategoriaQueroDelivery(codCategoria);
-	}
 	
 }

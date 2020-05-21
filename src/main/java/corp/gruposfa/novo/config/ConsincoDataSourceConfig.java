@@ -42,7 +42,7 @@ public class ConsincoDataSourceConfig {
 		em.setJpaVendorAdapter(vendorAdapter);
 		HashMap<String, Object> properties = new HashMap<>();
 		properties.put("hibernate.hbm2ddl.auto", "none");
-		properties.put("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.Oracle8iDialect");
 		em.setJpaPropertyMap(properties);
 		return em;
 	}

@@ -16,19 +16,15 @@ import corp.gruposfa.novo.model.dto.CategoriaQueroDeliveryDTO;
 @Repository
 public interface CategoriaQueroDeliveryRepository extends JpaRepository<CategoriaQueroDelivery,Integer> {
 	
-	@Query("select new corp.gruposfa.novo.consinco.model.dto.CategoriaCompareDTO(c.codCategoriaConsinco,c.nomeCategoria) from CategoriaQueroDelivery c")
-	List<CategoriaCompareDTO> buscarRegistros();
+	@Query("select new corp.gruposfa.novo.consinco.model.dto.CategoriaCompareDTO(c.codCategoriaConsinco,c.nomeCategoria) from CategoriaQueroDelivery c where c.ambiente = :ambiente")
+	List<CategoriaCompareDTO> buscarRegistros(@Param("ambiente") String ambiente);
 	
-	@Query("select new corp.gruposfa.novo.model.dto.CategoriaQueroDeliveryDTO(c.id,c.nomeCategoria,c.codCategoriaConsinco,c.codCategoriaQueroDelivery) from CategoriaQueroDelivery c where c.codCategoriaConsinco = :codCategoria")
-	CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(@Param("codCategoria") Integer codCategoria);
+	@Query("select new corp.gruposfa.novo.model.dto.CategoriaQueroDeliveryDTO(c.id,c.nomeCategoria,c.codCategoriaConsinco,c.codCategoriaQueroDelivery) from CategoriaQueroDelivery c where c.codCategoriaConsinco = :codCategoria and c.ambiente = :ambiente")
+	CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(@Param("codCategoria") Integer codCategoria,@Param("ambiente") String ambiente);
 	
 	@Modifying
 	@Transactional
-	@Query(value = "DELETE FROM NVO_CATEGORIA_QUERO_DELIVERY where COD_CATEGORIA_CONSINCO = :codCategoria", nativeQuery = true)
-	void excluirRegistroPorCodCategoriaConsinco(@Param("codCategoria") Integer codCategoria);
-	
-	@Query("select new corp.gruposfa.novo.model.dto.CategoriaQueroDeliveryDTO(c.id,c.nomeCategoria,c.codCategoriaConsinco,c.codCategoriaQueroDelivery) from CategoriaQueroDelivery c where c.codCategoriaQueroDelivery = :codCategoria")
-	CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaQueroDelivery(@Param("codCategoria") String codCategoria);
-	
+	@Query(value = "DELETE FROM NVO_CATEGORIA_QUERO_DELIVERY where COD_CATEGORIA_CONSINCO = :codCategoria AND AMBIENTE = :ambiente", nativeQuery = true)
+	void excluirRegistroPorCodCategoriaConsinco(@Param("codCategoria") Integer codCategoria,@Param("ambiente") String ambiente);
 	
 }
