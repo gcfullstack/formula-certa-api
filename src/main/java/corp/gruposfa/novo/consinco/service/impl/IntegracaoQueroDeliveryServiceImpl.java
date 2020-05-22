@@ -222,7 +222,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO, param);
 				validarStatusProduto(response.getData(), produtoDTO, param);
-				validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
+			//	validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
 				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
 			}
 		}
