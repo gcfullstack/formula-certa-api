@@ -88,7 +88,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
 			try {
 				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdProd(),queroDeliveryProperties.getTokenProd(),AMBIENTE_PROD, queroDeliveryProperties.getUrlApiProd()));
-				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
+				//integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
