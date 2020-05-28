@@ -224,6 +224,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 				validarStatusProduto(response.getData(), produtoDTO, param);
 			  //validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
 				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
+				validarEstoqueParaAtualizacaoDeStatus(response.getData(),param);
+				
 			}
 		}
 	}
@@ -236,12 +238,6 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			Integer estoque = estoqueConsinco.equals(0) ?  estoqueQueroDelivery * (-1) : (estoqueConsinco - estoqueQueroDelivery);
 			estoque = estoque > 9999 ? 9999 : estoque;
 			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-			
-			if(produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getData().getProduto().getQtdEstoque().equals(0)) {
-				produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-			}else {
-				produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-			}
 			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(),param.getAmbiente()));
 		}
 	}
@@ -320,6 +316,14 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			offset = offset + response.getData().getProdutos().size();
 		}
 		return list;
+	}
+	
+	private void validarEstoqueParaAtualizacaoDeStatus(ResponseProdutoDadoDTO produtoEncontrado,ParametrizacaoAmbienteDTO param) {
+		if(produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getData().getProduto().getQtdEstoque().equals(0)) {
+			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+		}else {
+			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+		}
 	}
 	
 }
