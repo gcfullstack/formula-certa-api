@@ -14,7 +14,8 @@ public enum TipoLogIntegracaoEnum {
 	PRODUTO_SEM_CATEGORIA("Produto sem categoria"),
 	PRODUTO_SEM_COD_BARRAS("Produto sem cód. de barras"),
 	PRODUTO_PRECO_ZERADO("Produto preço zerado"),
-	PRODUTO_NAO_ADICIONADO("Produto não foi adicionado");
+	PRODUTO_NAO_ADICIONADO("Produto não foi adicionado"),
+	PRODUTO_SEM_ESTOQUE("Produto sem estoque");
 	
 	private String descricao;
 

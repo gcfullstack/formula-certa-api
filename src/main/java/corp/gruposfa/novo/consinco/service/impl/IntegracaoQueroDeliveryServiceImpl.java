@@ -24,7 +24,6 @@ import corp.gruposfa.novo.consinco.model.dto.ProdutoAtualizarStatusDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoCadastroQueroDeliveryDTO;
 import corp.gruposfa.novo.consinco.model.dto.ProdutoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseAddCategoriaDTO;
-import corp.gruposfa.novo.consinco.model.dto.ResponseCategoriaDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseProdutoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseProdutoDadoDTO;
 import corp.gruposfa.novo.consinco.model.dto.ResponseTodosProdutosDTO;
@@ -60,6 +59,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	private final static String STATUS_OCULTO = "OCULTO";
 	
+	private final static String STATUS_ATIVO = "ATIVO";
+	
 	private final static String STATUS_ATIVO_CONSINCO = "A";
 	
 	private final static String CATEGORIA_A_CLASSIFICAR = "A CLASSIFICAR";
@@ -88,7 +89,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
 			try {
 				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdProd(),queroDeliveryProperties.getTokenProd(),AMBIENTE_PROD, queroDeliveryProperties.getUrlApiProd()));
-				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
+			//	integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -222,7 +223,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO, param);
 				validarStatusProduto(response.getData(), produtoDTO, param);
-				validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
+		//		validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
 				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
 			}
 		}
@@ -231,10 +232,17 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private void atualizarEstoqueProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		Integer estoqueQueroDelivery = produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getData().getProduto().getQtdEstoque();
 		Integer estoqueConsinco = produtoBaseConsinco.getQtdEstoqueMenorEmb();
-		if(!estoqueQueroDelivery.equals(produtoBaseConsinco.getQtdEstoqueMenorEmb())) {
-			Integer estoque = estoqueConsinco - estoqueQueroDelivery;
-			estoque = estoque > 0 ? estoque : 0;
+		estoqueConsinco = estoqueConsinco < 1 ? 0 : estoqueConsinco;
+		if(!estoqueQueroDelivery.equals(estoqueConsinco)) {
+			Integer estoque = estoqueConsinco.equals(0) ?  estoqueQueroDelivery * (-1) : (estoqueConsinco - estoqueQueroDelivery);
+			estoque = estoque > 9999 ? 9999 : estoque;
 			produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			
+			if(produtoQueroDeliveryFeignClient.buscarEstoque(produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getData().getProduto().getQtdEstoque().equals(0)) {
+				produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			}else {
+				produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			}
 			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + estoqueQueroDelivery + "/ Valor novo: " + estoqueConsinco, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(),param.getAmbiente()));
 		}
 	}
@@ -276,6 +284,11 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_PRECO_ZERADO,"Produto sem preço encontrado: : " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto(),ambiente));
 			return Boolean.FALSE;
 		}
+		
+		if(!validarSeProdutoPossuiEstoque(produtoDTO)) {
+			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_SEM_ESTOQUE,"Produto não importado por não ter estoque: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null, produtoDTO.getNomeProduto(),ambiente));
+			return Boolean.FALSE;
+		}
 		return Boolean.TRUE;
 	}
 	
@@ -289,6 +302,10 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	private Boolean validarPrecoDoProduto(ProdutoDTO produtoDTO) {
 		return produtoDTO.getPrecoVarejo() != null && produtoDTO.getPrecoVarejo().compareTo(BigDecimal.ZERO) > 0;
+	}
+	
+	private Boolean validarSeProdutoPossuiEstoque(ProdutoDTO produtoDTO) {
+		return produtoDTO.getQtdEstoqueMenorEmb() > 0;
 	}
 	
 	private List<ResponseProdutoDadoDTO> buscarTodosProdutos(ParametrizacaoAmbienteDTO param){
