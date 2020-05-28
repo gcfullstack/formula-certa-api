@@ -89,7 +89,6 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
 			try {
 				integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdProd(),queroDeliveryProperties.getTokenProd(),AMBIENTE_PROD, queroDeliveryProperties.getUrlApiProd()));
-			//	integrarDadosQueroDelivery(new ParametrizacaoAmbienteDTO(queroDeliveryProperties.getPlaceIdHml(),queroDeliveryProperties.getTokenHml(),AMBIENTE_HML, queroDeliveryProperties.getUrlApiHml()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -223,7 +222,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			}else {
 				validarPrecoProduto(response.getData(), produtoDTO, param);
 				validarStatusProduto(response.getData(), produtoDTO, param);
-		//		validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
+			  //validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
 				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
 			}
 		}
