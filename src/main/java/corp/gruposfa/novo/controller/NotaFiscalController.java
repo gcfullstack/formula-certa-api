@@ -42,6 +42,28 @@ public class NotaFiscalController {
 	public ResponseEntity<List<NotaFiscalDTO>> getNotasFiscaisUsuario(@PathVariable("usuario") Integer usuario) {
 		return ResponseEntity.ok(notaFiscalService.getNotasFiscaisUsuario(usuario));
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/aprovar/{id}")
+	public ResponseEntity aprovar(@PathVariable("id") Integer id) {
+		try {
+			notaFiscalService.aprovar(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/reprovar/{id}/{motivo}")
+	public ResponseEntity reprovar(@PathVariable("id") Integer id, @PathVariable("motivo") String motivo) {
+		try {
+			notaFiscalService.reprovar(id, motivo);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
 
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/salvar")

@@ -16,4 +16,8 @@ public interface NotaFiscalService {
 	void salvar(NotaFiscal notaFiscal);
 	
 	List<NotaFiscalDTO> buscar(NotaFiscalFiltroDTO notaFiscalFiltroDTO);
+		
+	void aprovar(Integer id);
+	
+	void reprovar(Integer id, String motivo);
 }

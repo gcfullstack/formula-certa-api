@@ -2,6 +2,7 @@ package corp.gruposfa.novo.model.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class NotaFiscalFiltroDTO {
 
@@ -17,6 +18,7 @@ public class NotaFiscalFiltroDTO {
 	private BigDecimal valorMaximo;
 	private Date dataVencimentoInicial;
 	private Date dataVencimentoFinal;
+	private List<Integer> statusSelecionados;
 	
 	public NotaFiscalFiltroDTO() {
 
@@ -116,5 +118,13 @@ public class NotaFiscalFiltroDTO {
 
 	public void setDataVencimentoFinal(Date dataVencimentoFinal) {
 		this.dataVencimentoFinal = dataVencimentoFinal;
+	}
+
+	public List<Integer> getStatusSelecionados() {
+		return statusSelecionados;
+	}
+
+	public void setStatusSelecionados(List<Integer> statusSelecionados) {
+		this.statusSelecionados = statusSelecionados;
 	}
 }

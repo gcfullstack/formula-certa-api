@@ -68,6 +68,9 @@ public class NotaFiscal {
 	@Column(name = "NVO_DATA_VENCIMENTO")
 	private Date dataVencimento;
 
+	@Column(name = "NVO_MOTIVO_REPROVACAO")
+	private String motivoReprovacao;
+
 	public Integer getId() {
 		return id;
 	}
@@ -186,5 +189,13 @@ public class NotaFiscal {
 
 	public void setDataVencimento(Date dataVencimento) {
 		this.dataVencimento = dataVencimento;
+	}
+
+	public String getMotivoReprovacao() {
+		return motivoReprovacao;
+	}
+
+	public void setMotivoReprovacao(String motivoReprovacao) {
+		this.motivoReprovacao = motivoReprovacao;
 	}
 }

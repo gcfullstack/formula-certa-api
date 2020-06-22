@@ -69,6 +69,16 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 	public void salvar(NotaFiscal notaFiscal) {
 		notaFiscalRepository.saveAndFlush(notaFiscal);
 	}
+
+	@Override
+	public void aprovar(Integer id) {
+		notaFiscalRepository.aprovar(id);
+	}
+
+	@Override
+	public void reprovar(Integer id, String motivo) {
+		notaFiscalRepository.reprovar(id, motivo);
+	}
 	
 	@Override
 	public List<NotaFiscalDTO> buscar(NotaFiscalFiltroDTO notaFiscalFiltroDTO) {
@@ -79,7 +89,7 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 				notaFiscalFiltroDTO.getDataEmissaoInicial() != null ? dfData.format(notaFiscalFiltroDTO.getDataEmissaoInicial()) : dfData.format(minDate), notaFiscalFiltroDTO.getDataEmissaoFinal() != null ? dfData.format(notaFiscalFiltroDTO.getDataEmissaoFinal()) : dfData.format(maxDate), 
 				notaFiscalFiltroDTO.getDataEntradaInicial() != null ? dfData.format(notaFiscalFiltroDTO.getDataEntradaInicial()) : dfData.format(minDate), notaFiscalFiltroDTO.getDataEntradaFinal() != null ? dfData.format(notaFiscalFiltroDTO.getDataEntradaFinal()) : dfData.format(maxDate), 
 				notaFiscalFiltroDTO.getDataEnvioInicial() != null ? dfDataHora.format(notaFiscalFiltroDTO.getDataEnvioInicial()) : dfDataHora.format(minDate), notaFiscalFiltroDTO.getDataEnvioFinal() != null ? dfDataHora.format(notaFiscalFiltroDTO.getDataEnvioFinal()) : dfDataHora.format(maxDate), 
-				notaFiscalFiltroDTO.getValorMinimo() != null ? notaFiscalFiltroDTO.getValorMinimo() : BigDecimal.ZERO, notaFiscalFiltroDTO.getValorMaximo() != null ? notaFiscalFiltroDTO.getValorMaximo() : new BigDecimal(2147483647).setScale(2)).stream().map(x -> new NotaFiscalDTO(x)).collect(Collectors.toList());
+				notaFiscalFiltroDTO.getValorMinimo() != null ? notaFiscalFiltroDTO.getValorMinimo() : BigDecimal.ZERO, notaFiscalFiltroDTO.getValorMaximo() != null ? notaFiscalFiltroDTO.getValorMaximo() : new BigDecimal(2147483647).setScale(2), notaFiscalFiltroDTO.getStatusSelecionados()).stream().map(x -> new NotaFiscalDTO(x)).collect(Collectors.toList());
 	}
 
 }
