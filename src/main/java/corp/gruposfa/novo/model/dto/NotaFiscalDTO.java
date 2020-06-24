@@ -21,6 +21,7 @@ public class NotaFiscalDTO {
 	private Date dataEnvio;
 	private Date dataVencimento;
 	private String motivoReprovacao;
+	private String usuarioAprovacao;
 	
 	public NotaFiscalDTO(NotaFiscalInterfaceDTO x) {
 		this.id = x.getId();
@@ -39,6 +40,7 @@ public class NotaFiscalDTO {
 		this.dataEnvio = x.getDataEnvio();
 		this.dataVencimento = x.getDataVencimento();
 		this.motivoReprovacao = x.getMotivoReprovacao();
+		this.usuarioAprovacao = x.getUsuarioAprovacao();
 	}
 
 	public NotaFiscalDTO() {
@@ -148,6 +150,14 @@ public class NotaFiscalDTO {
 		this.dataVencimento = dataVencimento;
 	}
 
+	public String getUsuarioAprovacao() {
+		return usuarioAprovacao;
+	}
+
+	public void setUsuarioAprovacao(String usuarioAprovacao) {
+		this.usuarioAprovacao = usuarioAprovacao;
+	}
+
 	public interface NotaFiscalInterfaceDTO {
 
 		Integer getId();
@@ -166,6 +176,7 @@ public class NotaFiscalDTO {
 		Date getDataEnvio();
 		Date getDataVencimento();
 		String getMotivoReprovacao();
+		String getUsuarioAprovacao();
 		
 	}
 }

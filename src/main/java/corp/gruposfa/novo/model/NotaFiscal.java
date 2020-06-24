@@ -71,6 +71,9 @@ public class NotaFiscal {
 	@Column(name = "NVO_MOTIVO_REPROVACAO")
 	private String motivoReprovacao;
 
+	@Column(name = "NVO_USUARIO_APROVACAO")
+	private String usuarioAprovacao;
+
 	public Integer getId() {
 		return id;
 	}
@@ -197,5 +200,13 @@ public class NotaFiscal {
 
 	public void setMotivoReprovacao(String motivoReprovacao) {
 		this.motivoReprovacao = motivoReprovacao;
+	}
+
+	public String getUsuarioAprovacao() {
+		return usuarioAprovacao;
+	}
+
+	public void setUsuarioAprovacao(String usuarioAprovacao) {
+		this.usuarioAprovacao = usuarioAprovacao;
 	}
 }

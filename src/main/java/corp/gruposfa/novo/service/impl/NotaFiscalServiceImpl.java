@@ -64,6 +64,16 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 	public List<NotaFiscalDTO> getNotasFiscaisUsuario(Integer usuario) {
 		return notaFiscalRepository.getNotasFiscaisUsuario(usuario).stream().map(x -> new NotaFiscalDTO(x)).collect(Collectors.toList());
 	}
+	
+	@Override
+	public NotaFiscalDTO getNotaFiscalId(Integer id) {
+		return new NotaFiscalDTO(notaFiscalRepository.getNotaFiscalId(id));
+	}
+	
+	@Override
+	public String getEmailUsuarioInterno(String usuario) {
+		return notaFiscalRepository.getEmailUsuarioInterno(usuario);
+	}
 
 	@Override
 	public void salvar(NotaFiscal notaFiscal) {
@@ -71,13 +81,13 @@ public class NotaFiscalServiceImpl implements NotaFiscalService{
 	}
 
 	@Override
-	public void aprovar(Integer id) {
-		notaFiscalRepository.aprovar(id);
+	public void aprovar(Integer id, String usuario) {
+		notaFiscalRepository.aprovar(id, usuario);
 	}
 
 	@Override
-	public void reprovar(Integer id, String motivo) {
-		notaFiscalRepository.reprovar(id, motivo);
+	public void reprovar(Integer id, String usuario, String motivo) {
+		notaFiscalRepository.reprovar(id, usuario, motivo);
 	}
 	
 	@Override

@@ -17,7 +17,11 @@ public interface NotaFiscalService {
 	
 	List<NotaFiscalDTO> buscar(NotaFiscalFiltroDTO notaFiscalFiltroDTO);
 		
-	void aprovar(Integer id);
+	void aprovar(Integer id, String usuario);
 	
-	void reprovar(Integer id, String motivo);
+	void reprovar(Integer id, String usuario, String motivo);
+	
+	NotaFiscalDTO getNotaFiscalId(Integer id);
+	
+	String getEmailUsuarioInterno(String usuario);
 }
