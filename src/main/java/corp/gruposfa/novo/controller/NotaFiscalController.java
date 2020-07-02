@@ -51,7 +51,7 @@ public class NotaFiscalController {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@PostMapping("/aprovar/{usuario}/{id}")
+	@PostMapping("/aprovar/{id}/{usuario}")
 	public ResponseEntity aprovar(@PathVariable("id") Integer id, @PathVariable("usuario") String usuario) {
 		try {
 			notaFiscalService.aprovar(id, usuario);
