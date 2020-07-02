@@ -69,7 +69,7 @@ public class NotaFiscalController {
 			Context context = new Context();
 			NotaFiscalDTO nf = notaFiscalService.getNotaFiscalId(id);
 			context.setVariable("nf", nf);
-			//emailHtmlSender.send(nf.getUsuario().contains("@") ? nf.getUsuario() : notaFiscalService.getEmailUsuarioInterno(usuario), "Nota Fiscal Reprovada - NOVO", "email/emailNFReprovada", context);
+			emailHtmlSender.send(nf.getUsuario().contains("@") ? nf.getUsuario() : notaFiscalService.getEmailUsuarioInterno(usuario), "Nota Fiscal Reprovada - NOVO", "email/emailNFReprovada", context);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
