@@ -1,8 +1,29 @@
 spring:
     profiles:
-        active: dev
+        active: @spring.profiles.active@
     main:
-        allow-bean-definition-overriding: true
+        allow-bean-definition-overriding: true            
+    mail:
+        transport:
+            protocol: smtp
+        debug: true
+        properties:
+            mail:
+                smtp:
+                    starttls:
+                        enable: true
+        host: smtp.office365.com
+        username: naoresponda@gruposfa.com.br
+        password: G4up05f@
+        port: 587
+        encryption: tls
+        smtp: 
+            auth: true
+            starttls:
+                enable: true
+                required: true
+            ssl:
+                enable: false
     
         
  

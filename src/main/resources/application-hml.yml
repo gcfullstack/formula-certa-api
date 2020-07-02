@@ -6,8 +6,12 @@ spring:
         username: novo
         password: N0v0@t@c@rej0
         driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    datasource-consinco:
+        jdbc-url: jdbc:oracle:thin:@gruposfa.ckfmqte6xhyj.us-east-1.rds.amazonaws.com:1521:ORCL
+        username: consinco
+        password: consinco
+        driverClassName: oracle.jdbc.OracleDriver   
     jpa:
-        database-platform: org.hibernate.dialect.SQLServer2012Dialect
         hibernate:
             ddl-auto: none
     properties:
@@ -15,6 +19,16 @@ spring:
             show_sql: true
             use_sql_comments: true
             format_sql: true
+application:
+    quero-delivery:
+        url-api-hml: https://stageapi.quero.io
+        url-api-prod: https://api.quero.io
+        token-hml: Basic bm92b2F0YWNhcmVqbzpub3ZvYXRhY2FyZWpv
+        place-id-hml: 5ebbdead910213001cb3a77d
+        token-prod: Basic bm92b2F0YWNhcmVqbzpwYXNzd2Rub3ZvYXRhYw==
+        place-id-prod: 5e988d39517ce60141182af6
+    url-apis:
+        url-servico-parametros-integracao: http://api-portal.gruposfa.com.br/sfaservicos/rest/parametros-integracao/servicos    
 server:
     port: 8080             
  

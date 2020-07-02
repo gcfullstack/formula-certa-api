@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable" style="margin: 0;background-color: #fff;height: 100% !important;width: 100% !important;"> 
+<tr>
+	<center>
+		<div style="width: 150px !important;">
+			<img style="width: 100% !important; max-width: 150px;" src="http://novo.gruposfa.com.br/assets/imagens/novo.png"/>
+		</div>
+	</center>
+</tr>
+<tr>
+   <td align="center" valign="top" style="border-collapse: collapse;">    
+   <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateBody">
+      <tr>
+         <td valign="top" class="bodyContent" style="border-collapse: collapse;background-color: #FFFFFF;">   
+         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>           
+               <td valign="top" style="border-collapse: collapse;"><div style="color: #505050;font-family: Helvetica;font-size: 14px;letter-spacing: -.45px;line-height: 150%;text-align: left;">                
+               <h1 class="h1" style="color: #1A202E;display: block;font-family: Helvetica;font-size: 45px;font-weight: bold;letter-spacing: -0.5px;line-height: 100%;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;">Nota Fiscal Reprovada</h1>    
+               <h2 class="h2" style="color: #dbac09;display: block;font-family: Helvetica;font-size: 24px;font-weight: bold;letter-spacing: -0.5px;line-height: 100%;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;">Sua nota fiscal foi reprovada</h2>      
+               <strong>Empresa: </strong> <span th:text="${nf.empresa}">empresa</span> <br>   
+               <strong>Loja: </strong> <span th:text="${nf.loja}">loja</span> <br>  
+               <strong>Número Nota: </strong> <span th:text="${nf.numeroNota}">numeroNota</span> <br>  
+               <strong>Data Emissão: </strong> <span th:text="${#dates.format(nf.dataEmissao, 'dd/MM/yyyy')}">dataEmissao</span> <br>  
+               <strong>Data Entrada: </strong> <span th:text="${#dates.format(nf.dataEntrada, 'dd/MM/yyyy')}">dataEntrada</span> <br>  
+               <strong>Data Upload: </strong> <span th:text="${#dates.format(nf.dataUpload, 'dd/MM/yyyy')}">dataUpload</span> <br>  
+               <strong>Valor: </strong> <span th:text="${nf.valor}">valor</span> <br>  
+               <strong>Fornecedor: </strong> <span th:text="${nf.cnpjFornecedor} + ' - ' + ${nf.nomeFornecedor}">fornecedor</span> <br>  
+               <strong>Nome Arquivo: </strong> <span th:text="${nf.nomeArquivo}">nomeArquivo</span> <br>  
+               <strong>Data Envio: </strong> <span th:text="${#dates.format(nf.dataEnvio, 'dd/MM/yyyy')}">dataEnvio</span> <br>  
+               <strong>Data Vencimento: </strong> <span th:text="${#dates.format(nf.dataVencimento, 'dd/MM/yyyy')}">dataVencimento</span> <br>  
+               <strong>Motivo Reprovação: </strong> <span th:text="${nf.motivoReprovacao}">motivoReprovacao</span> <br>  
+               <strong>Usuário Reprovação: </strong> <span th:text="${nf.usuarioAprovacao}">usuarioAprovacao</span> <br>  
+               <br><br>      
+               </div></td>          
+            </tr>
+         </table>
+      </tr>
+   </table>
+   </td>            
+</tr>
+</table>            
+</tr>           
+</table>      
+</td>      
+</tr>   
+</table>
