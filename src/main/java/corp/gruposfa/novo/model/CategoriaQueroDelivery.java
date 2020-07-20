@@ -27,6 +27,9 @@ public class CategoriaQueroDelivery {
 	@Column(name = "COD_CATEGORIA_QUERO_DELIVERY")
 	private String codCategoriaQueroDelivery;
 	
+	@Column(name = "COD_LOJA")
+	private Integer codLoja;
+	
 	@Column(name = "AMBIENTE")
 	private String ambiente;
 	
@@ -35,11 +38,12 @@ public class CategoriaQueroDelivery {
 	}
 
 	public CategoriaQueroDelivery(String nomeCategoria, Integer codCategoriaConsinco,
-			String codCategoriaQueroDelivery, String ambiente) {
+			String codCategoriaQueroDelivery, String ambiente, Integer codLoja) {
 		this.nomeCategoria = nomeCategoria;
 		this.codCategoriaConsinco = codCategoriaConsinco;
 		this.codCategoriaQueroDelivery = codCategoriaQueroDelivery;
 		this.ambiente = ambiente;
+		this.codLoja = codLoja;
 	}
 
 	public Integer getId() {
@@ -80,6 +84,14 @@ public class CategoriaQueroDelivery {
 
 	public void setAmbiente(String ambiente) {
 		this.ambiente = ambiente;
+	}
+
+	public Integer getCodLoja() {
+		return codLoja;
+	}
+
+	public void setCodLoja(Integer codLoja) {
+		this.codLoja = codLoja;
 	}
 	
 }

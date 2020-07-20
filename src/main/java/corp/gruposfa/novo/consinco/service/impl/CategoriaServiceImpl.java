@@ -19,8 +19,8 @@ public class CategoriaServiceImpl implements CategoriaService {
 	}
 
 	@Override
-	public List<CategoriaCompareDTO> buscarCategorias() {
-		return categoriaRepository.buscarNomeCategorias().stream().map(x -> new CategoriaCompareDTO(x)).collect(Collectors.toList());
+	public List<CategoriaCompareDTO> buscarCategorias(Integer idLoja) {
+		return categoriaRepository.buscarNomeCategorias(idLoja).stream().map(x -> new CategoriaCompareDTO(x)).collect(Collectors.toList());
 	}
 
 }

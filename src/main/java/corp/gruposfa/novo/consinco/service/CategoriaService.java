@@ -6,6 +6,6 @@ import corp.gruposfa.novo.consinco.model.dto.CategoriaCompareDTO;
 
 public interface CategoriaService {
 
-	List<CategoriaCompareDTO> buscarCategorias();
+	List<CategoriaCompareDTO> buscarCategorias(Integer codLoja);
 	
 }
