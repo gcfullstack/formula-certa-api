@@ -10,14 +10,17 @@ public class ParametrizacaoAmbienteDTO {
 	
 	private String url;
 	
+	private Integer codLoja;
+	
 	public ParametrizacaoAmbienteDTO() {
 	}
 
-	public ParametrizacaoAmbienteDTO(String placeId, String token, String ambiente, String url) {
+	public ParametrizacaoAmbienteDTO(String placeId, String token, String ambiente, String url, Integer codLoja) {
 		this.placeId = placeId;
 		this.token = token;
 		this.ambiente = ambiente;
 		this.url = url;
+		this.codLoja = codLoja;
 	}
 
 	public String getPlaceId() {
@@ -52,4 +55,12 @@ public class ParametrizacaoAmbienteDTO {
 		this.url = url;
 	}
 
+	public Integer getCodLoja() {
+		return codLoja;
+	}
+
+	public void setCodLoja(Integer codLoja) {
+		this.codLoja = codLoja;
+	}
+	
 }

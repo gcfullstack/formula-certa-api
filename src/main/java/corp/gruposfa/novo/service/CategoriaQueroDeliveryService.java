@@ -10,11 +10,11 @@ public interface CategoriaQueroDeliveryService {
 	
 	CategoriaQueroDelivery salvarRegistro(CategoriaQueroDelivery obj);
 	
-	List<CategoriaCompareDTO> buscarRegistros(String ambiente);
+	List<CategoriaCompareDTO> buscarRegistros(String ambiente,Integer codLoja);
 	
-	CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(Integer codCategoria,String ambiente);
+	CategoriaQueroDeliveryDTO buscarRegistroPorCodCategoriaConsinco(Integer codCategoria,String ambiente, Integer codLoja);
 	
-	void excluirRegistroPorCodCategoriaConsinco(Integer codCategoria, String ambiente);
+	void excluirRegistroPorCodCategoriaConsinco(Integer codCategoria, String ambiente, Integer codLoja);
 	
 
 }

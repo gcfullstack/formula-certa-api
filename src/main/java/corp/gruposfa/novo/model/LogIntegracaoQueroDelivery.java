@@ -47,11 +47,14 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 	@Column(name = "AMBIENTE")
 	private String ambiente;
 	
+	@Column(name = "COD_LOJA")
+	private Integer codLoja;
+	
 	public LogIntegracaoQueroDelivery() {
 	}
 	
 	public LogIntegracaoQueroDelivery(Date data, TipoLogIntegracaoEnum tipoLog, String historico, String codBarras,
-			String nomeCategoria, String nomeProduto,String ambiente) {
+			String nomeCategoria, String nomeProduto,String ambiente, Integer codLoja) {
 		this.data = data;
 		this.tipoLog = tipoLog;
 		this.historico = historico;
@@ -59,6 +62,7 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 		this.nomeCategoria = nomeCategoria;
 		this.nomeProduto = nomeProduto;
 		this.ambiente = ambiente;
+		this.codLoja = codLoja;
 	}
 
 	public Integer getId() {
@@ -123,6 +127,14 @@ public class LogIntegracaoQueroDelivery implements Serializable {
 
 	public void setAmbiente(String ambiente) {
 		this.ambiente = ambiente;
+	}
+
+	public Integer getCodLoja() {
+		return codLoja;
+	}
+
+	public void setCodLoja(Integer codLoja) {
+		this.codLoja = codLoja;
 	}
 	
 }
