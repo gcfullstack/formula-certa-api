@@ -143,8 +143,10 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		for (CategoriaCompareDTO categoria : categoriasParaAdicionar) {
 			if(!categoria.getNomeCategoria().equals(CATEGORIA_A_CLASSIFICAR)) {
 				ResponseAddCategoriaDTO categoriaSalvaNoAPP = categoriaQueroDeliveryFeignClient.adicionarCategoria(new CategoriaDTO(categoria.getNomeCategoria(),Boolean.TRUE),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-				categoriaQueroDeliveryService.salvarRegistro(new CategoriaQueroDelivery(categoria.getNomeCategoria(), categoria.getCodCategoria(), categoriaSalvaNoAPP.getData().get_id(), param.getAmbiente(), param.getCodLoja()));
-				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + categoria.getNomeCategoria(), null, categoria.getNomeCategoria(),null,param.getAmbiente(),param.getCodLoja()));
+				if(categoriaSalvaNoAPP.getR()) {
+					categoriaQueroDeliveryService.salvarRegistro(new CategoriaQueroDelivery(categoria.getNomeCategoria(), categoria.getCodCategoria(), categoriaSalvaNoAPP.getData().get_id(), param.getAmbiente(), param.getCodLoja()));
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_CATEGORIA,"Categoria adicionada: " + categoria.getNomeCategoria(), null, categoria.getNomeCategoria(),null,param.getAmbiente(),param.getCodLoja()));
+				}
 			}
 		}
 	}
