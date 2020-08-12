@@ -196,7 +196,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	}
 	
 	private void removerProdutos(ParametrizacaoAmbienteDTO param) {
-		List<ProdutoDTO> listaProdutosConsinco = produtoService.buscarInformacoesIntegracaoProduto();
+		List<ProdutoDTO> listaProdutosConsinco = produtoService.buscarInformacoesIntegracaoProduto(param.getCodLoja());
 		List<ResponseProdutoDadoDTO> listaProdutosQueroDelivery = buscarTodosProdutos(param);
 		Boolean encontrou = Boolean.FALSE;
 		for (ResponseProdutoDadoDTO prodQueroDelivery : listaProdutosQueroDelivery) {
@@ -218,7 +218,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	}
 	
 	private void salvarProduto(ParametrizacaoAmbienteDTO param) {
-		List<ProdutoDTO> listaProdutos = produtoService.buscarInformacoesIntegracaoProduto();
+		List<ProdutoDTO> listaProdutos = produtoService.buscarInformacoesIntegracaoProduto(param.getCodLoja());
 		for (ProdutoDTO produtoDTO : listaProdutos) {
 			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
 			if(!response.getR()) {

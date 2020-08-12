@@ -19,8 +19,8 @@ public class ProdutoServiceImpl implements ProdutoService {
 	}
 
 	@Override
-	public List<ProdutoDTO> buscarInformacoesIntegracaoProduto() {
-		return produtoRepository.buscarProdutos().stream().map(x -> new ProdutoDTO(x)).collect(Collectors.toList());
+	public List<ProdutoDTO> buscarInformacoesIntegracaoProduto(Integer codLoja) {
+		return produtoRepository.buscarProdutos(codLoja).stream().map(x -> new ProdutoDTO(x)).collect(Collectors.toList());
 	}
 
 }

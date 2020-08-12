@@ -6,6 +6,6 @@ import corp.gruposfa.novo.consinco.model.dto.ProdutoDTO;
 
 public interface ProdutoService {
 	
-	List<ProdutoDTO> buscarInformacoesIntegracaoProduto();
+	List<ProdutoDTO> buscarInformacoesIntegracaoProduto(Integer codLoja);
 
 }
