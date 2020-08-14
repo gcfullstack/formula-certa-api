@@ -380,14 +380,12 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			 }
 			 Integer estoqueConsinco = produtoConsinco.getQtdEstoqueMenorEmb();
 			 estoqueConsinco = estoqueConsinco < 1 ? 0 : estoqueConsinco;
-			 if(!produtoQD.get().getQtdEstoque().equals(produtoConsinco.getQntEmbVarejo())) {
-					Integer estoque = estoqueConsinco.equals(0) ?  estoqueConsinco : (estoqueConsinco - produtoQD.get().getQtdEstoque());
-					estoque = estoque > 9999 ? 9999 : estoque;
-					estoque = estoque.equals(0) ? 0 : estoque;
-					produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoQD.get().getCodBarra(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-					produtoQueroDeliveryService.atualizarEstoque(param.getCodLoja(), estoque, produtoConsinco.getCodBarras());
+			 if(!produtoQD.get().getQtdEstoque().equals(estoqueConsinco)) {
+				 	estoqueConsinco = estoqueConsinco > 9999 ? 9999 : estoqueConsinco;
+					produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoqueConsinco), produtoQD.get().getCodBarra(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+					produtoQueroDeliveryService.atualizarEstoque(param.getCodLoja(), estoqueConsinco, produtoConsinco.getCodBarras());
 					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + produtoQD.get().getQtdEstoque() + "/ Valor novo: " + estoqueConsinco, produtoQD.get().getCodBarra(), null, produtoQD.get().getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
-					if(estoque.equals(0)) {
+					if(estoqueConsinco.equals(0)) {
 						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
 					}else {
 						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
