@@ -228,15 +228,30 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private void salvarProduto(ParametrizacaoAmbienteDTO param) {
 		List<ProdutoDTO> listaProdutos = produtoService.buscarInformacoesIntegracaoProduto(param.getCodLoja());
 		for (ProdutoDTO produtoDTO : listaProdutos) {
-			ResponseProdutoDTO response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			ResponseProdutoDTO response = new ResponseProdutoDTO();
+			try {
+				response = produtoQueroDeliveryFeignClient.buscarProdutoPorCodBarras(produtoDTO.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if(!response.getR()) {
 				CategoriaQueroDeliveryDTO categoriaEncontrada = categoriaQueroDeliveryService.buscarRegistroPorCodCategoriaConsinco(produtoDTO.getCodCategoria(),param.getAmbiente(), param.getCodLoja());
 			    if(validarProdutoAntesSalvar(produtoDTO,categoriaEncontrada,param.getAmbiente(),param.getCodLoja())) {
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.getCodCategoriaQueroDelivery(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
-					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto,param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getR()) {
+					Boolean produtoAdicionado = Boolean.FALSE;
+			    	try {
+			    		produtoAdicionado = produtoQueroDeliveryFeignClient.adicionarProduto(produto,param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getR();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			    	if(produtoAdicionado) {
+					try {
 						produtoQueroDeliveryFeignClient.alterarControlaEstoque(new ProdutoAlterarControlaEstoqueDTO(Boolean.TRUE), produto.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
 						produtoQueroDeliveryService.salvarProduto(new ProdutoQueroDelivery(param.getCodLoja(), produtoDTO.getCodProduto().intValue(), produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), produtoDTO.getPrecoVarejo(), 0, null));
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					}else {
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
 					}
@@ -266,15 +281,24 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	private void validarPrecoProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		if(produtoBaseConsinco.getPrecoVarejo().compareTo(produtoEncontrado.getPreco()) != 0) {
-			produtoQueroDeliveryFeignClient.atualizarPrecoProduto(new ProdutoAtualizarPrecoDTO(produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getPreco()), produtoEncontrado.getCodigoBarras(), param.getPlaceId(), param.getToken(),URI.create(param.getUrl()));
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente(), param.getCodLoja()));
+			try {
+				produtoQueroDeliveryFeignClient.atualizarPrecoProduto(new ProdutoAtualizarPrecoDTO(produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getPreco()), produtoEncontrado.getCodigoBarras(), param.getPlaceId(), param.getToken(),URI.create(param.getUrl()));
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_PRECO_PRODUTO,"Preço Atualizado. Valor antigo: " + produtoEncontrado.getPreco() + "/ Valor novo: " + produtoBaseConsinco.getPrecoVarejo(), produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente(), param.getCodLoja()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
 		}
 	}
 	
 	private void validarStatusProduto(ResponseProdutoDadoDTO produtoEncontrado,ProdutoDTO produtoBaseConsinco,ParametrizacaoAmbienteDTO param) {
 		if(!produtoBaseConsinco.getStatusVenda().equals(STATUS_ATIVO_CONSINCO)) {
-			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-			logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente(), param.getCodLoja()));
+			try {
+				produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+				logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_STATUS_PRODUTO,"Status Atualizado. Novo status: " + STATUS_OCULTO, produtoEncontrado.getCodigoBarras(), null, produtoEncontrado.getNome(), param.getAmbiente(), param.getCodLoja()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -382,14 +406,19 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			 estoqueConsinco = estoqueConsinco < 1 ? 0 : estoqueConsinco;
 			 if(!produtoQD.get().getQtdEstoque().equals(estoqueConsinco)) {
 				 	estoqueConsinco = estoqueConsinco > 9999 ? 9999 : estoqueConsinco;
-					produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoqueConsinco), produtoQD.get().getCodBarra(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-					produtoQueroDeliveryService.atualizarEstoque(param.getCodLoja(), estoqueConsinco, produtoConsinco.getCodBarras());
-					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + produtoQD.get().getQtdEstoque() + "/ Valor novo: " + estoqueConsinco, produtoQD.get().getCodBarra(), null, produtoQD.get().getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
-					if(estoqueConsinco.equals(0)) {
-						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
-					}else {
-						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+				 	try {
+				 		produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoqueConsinco), produtoQD.get().getCodBarra(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+						produtoQueroDeliveryService.atualizarEstoque(param.getCodLoja(), estoqueConsinco, produtoConsinco.getCodBarras());
+						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + produtoQD.get().getQtdEstoque() + "/ Valor novo: " + estoqueConsinco, produtoQD.get().getCodBarra(), null, produtoQD.get().getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
+						if(estoqueConsinco.equals(0)) {
+							produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+						}else {
+							produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
+				
 			 }
 		}
 	}
