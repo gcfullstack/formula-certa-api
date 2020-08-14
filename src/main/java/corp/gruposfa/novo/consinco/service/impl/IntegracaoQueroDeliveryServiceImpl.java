@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -37,8 +38,11 @@ import corp.gruposfa.novo.consinco.service.ProdutoService;
 import corp.gruposfa.novo.feign.ServicoIntegracaoFeignClient;
 import corp.gruposfa.novo.model.CategoriaQueroDelivery;
 import corp.gruposfa.novo.model.LogIntegracaoQueroDelivery;
+import corp.gruposfa.novo.model.ProdutoQueroDelivery;
 import corp.gruposfa.novo.model.dto.CategoriaQueroDeliveryDTO;
+import corp.gruposfa.novo.model.dto.ProdutoQueroDeliveryDTO;
 import corp.gruposfa.novo.service.CategoriaQueroDeliveryService;
+import corp.gruposfa.novo.service.ProdutoQueroDeliveryService;
 import corp.gruposfa.novo.utils.ConstantsUtils;
 import corp.gruposfa.novo.utils.MethodsUtils;
 
@@ -48,8 +52,6 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	private final CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient;
 	
 	private final ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient;
-	
-	private final ServicoIntegracaoFeignClient servicoIntegracaoFeignClient;
 	
 	private final CategoriaService categoriaService;
 	
@@ -69,7 +71,12 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 	
 	private final static String AMBIENTE_PROD = "PROD";
 	
+	private final ServicoIntegracaoFeignClient servicoIntegracaoFeignClient;
+	
 	private final QueroDeliveryProperties queroDeliveryProperties;
+	
+	private final ProdutoQueroDeliveryService produtoQueroDeliveryService;
+	
 	
 	private final static HashMap<Integer, String> MAP_LOJAS = new HashMap<Integer, String>() {
 		{
@@ -78,15 +85,16 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		}
 	};
 	
-	public IntegracaoQueroDeliveryServiceImpl(CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,CategoriaService categoriaService,ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient,ProdutoService produtoService,LogIntegracaoQueroDeliveryService logIntegracaoQueroDeliveryService,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient,CategoriaQueroDeliveryService categoriaQueroDeliveryService,QueroDeliveryProperties queroDeliveryProperties) {
+	public IntegracaoQueroDeliveryServiceImpl(CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,CategoriaService categoriaService,ProdutoQueroDeliveryFeignClient produtoQueroDeliveryFeignClient,ProdutoService produtoService,LogIntegracaoQueroDeliveryService logIntegracaoQueroDeliveryService,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient,CategoriaQueroDeliveryService categoriaQueroDeliveryService,QueroDeliveryProperties queroDeliveryProperties,ProdutoQueroDeliveryService produtoQueroDeliveryService) {
 		this.categoriaQueroDeliveryFeignClient = categoriaQueroDeliveryFeignClient;
 		this.categoriaService = categoriaService;
 		this.produtoQueroDeliveryFeignClient = produtoQueroDeliveryFeignClient;
 		this.produtoService = produtoService;
 		this.logIntegracaoQueroDeliveryService = logIntegracaoQueroDeliveryService;
-		this.servicoIntegracaoFeignClient = servicoIntegracaoFeignClient;
 		this.categoriaQueroDeliveryService = categoriaQueroDeliveryService;
 		this.queroDeliveryProperties = queroDeliveryProperties;
+		this.produtoQueroDeliveryService = produtoQueroDeliveryService;
+		this.servicoIntegracaoFeignClient = servicoIntegracaoFeignClient;
 	}
 	
 	@Override
@@ -103,8 +111,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			servicoIntegracaoFeignClient.salvarFimDeExecucaoDeServico(18);
-			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(18,Boolean.TRUE);
+			servicoIntegracaoFeignClient.salvarFimDeExecucaoDeServico(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY);
+			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_INTEGRACAO_QUERO_DELIVERY,Boolean.TRUE);
 		}
 	}
 	
@@ -227,6 +235,7 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			    	ProdutoCadastroQueroDeliveryDTO produto = new ProdutoCadastroQueroDeliveryDTO(produtoDTO.getNomeProduto(), categoriaEncontrada.getCodCategoriaQueroDelivery(), produtoDTO.getNomeProduto(), "ATIVO", produtoDTO.getPrecoVarejo(), BigDecimal.ZERO, produtoDTO.getCodBarras(), produtoDTO.getCodProduto().toString(), Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
 					if(produtoQueroDeliveryFeignClient.adicionarProduto(produto,param.getPlaceId(),param.getToken(),URI.create(param.getUrl())).getR()) {
 						produtoQueroDeliveryFeignClient.alterarControlaEstoque(new ProdutoAlterarControlaEstoqueDTO(Boolean.TRUE), produto.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+						produtoQueroDeliveryService.salvarProduto(new ProdutoQueroDelivery(param.getCodLoja(), produtoDTO.getCodProduto().intValue(), produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), produtoDTO.getPrecoVarejo(), 0, null));
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ADICIONAR_PRODUTO,"Produto adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
 					}else {
 						logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.PRODUTO_NAO_ADICIONADO,"Produto não foi adicionado: " + produtoDTO.getNomeProduto(), produtoDTO.getCodBarras(), null,produtoDTO.getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
@@ -236,8 +245,8 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 				validarPrecoProduto(response.getData(), produtoDTO, param);
 				validarStatusProduto(response.getData(), produtoDTO, param);
 			  //validarNomeEDescricaoProduto(response.getData(), produtoDTO, param);
-				atualizarEstoqueProduto(response.getData(),produtoDTO, param);
-				validarEstoqueParaAtualizacaoDeStatus(response.getData(),param);
+			  //atualizarEstoqueProduto(response.getData(),produtoDTO, param);
+			  //validarEstoqueParaAtualizacaoDeStatus(response.getData(),param);
 				
 			}
 		}
@@ -322,11 +331,12 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 		Integer offset = 0;
 		while(true) {
 			response = produtoQueroDeliveryFeignClient.buscarProdutos(offset, 50, param.getPlaceId(), param.getToken(),URI.create(param.getUrl()));
-			if(response.getData() == null) {
+			if(response.getData() == null || response.getData().getProdutos() == null) {
 				break;
 			}
 			list.addAll(response.getData().getProdutos());
 			offset = offset + response.getData().getProdutos().size();
+			
 		}
 		return list;
 	}
@@ -336,6 +346,53 @@ public class IntegracaoQueroDeliveryServiceImpl implements IntegracaoQueroDelive
 			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
 		}else {
 			produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoEncontrado.getCodigoBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+		}
+	}
+	
+	@Override
+	public void atualizarEstoque() {
+		if (Boolean.valueOf(servicoIntegracaoFeignClient.verificarStatusExecucaoJob(ConstantsUtils.ID_ESTOQUE_QUERO_DELIVERY))) {
+			 servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_ESTOQUE_QUERO_DELIVERY, Boolean.FALSE);
+			 servicoIntegracaoFeignClient.salvarInicioDeExecucaoDeServico(ConstantsUtils.ID_ESTOQUE_QUERO_DELIVERY);
+
+			try {
+				for (Map.Entry<Integer, String> entry : MAP_LOJAS.entrySet()) {
+					Integer codLoja = entry.getKey();
+					String placeID = entry.getValue();
+					validarEstoque(new ParametrizacaoAmbienteDTO(placeID, queroDeliveryProperties.getTokenProd(),AMBIENTE_PROD, queroDeliveryProperties.getUrlApiProd(), codLoja));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			servicoIntegracaoFeignClient.salvarFimDeExecucaoDeServico(ConstantsUtils.ID_ESTOQUE_QUERO_DELIVERY);
+			servicoIntegracaoFeignClient.alterarStatusExecucaoJob(ConstantsUtils.ID_ESTOQUE_QUERO_DELIVERY,Boolean.TRUE);
+		}
+	}
+	
+	private void validarEstoque(ParametrizacaoAmbienteDTO param) {
+		List<ProdutoDTO> listaProdutosConsinco = produtoService.buscarInformacoesIntegracaoProduto(param.getCodLoja());
+		List<ProdutoQueroDeliveryDTO> produtoQueroDelivery = produtoQueroDeliveryService.buscarProdutosPorCodLoja(param.getCodLoja());
+		for (ProdutoDTO produtoConsinco : listaProdutosConsinco) {
+			 Optional<ProdutoQueroDeliveryDTO> produtoQD = produtoQueroDelivery.stream().filter(x -> x.getCodBarra().equals(produtoConsinco.getCodBarras())).findFirst();
+			 if(!produtoQD.isPresent()) {
+				 continue;
+			 }
+			 Integer estoqueConsinco = produtoConsinco.getQtdEstoqueMenorEmb();
+			 estoqueConsinco = estoqueConsinco < 1 ? 0 : estoqueConsinco;
+			 if(!produtoQD.get().getQtdEstoque().equals(produtoConsinco.getQntEmbVarejo())) {
+					Integer estoque = estoqueConsinco.equals(0) ?  estoqueConsinco : (estoqueConsinco - produtoQD.get().getQtdEstoque());
+					estoque = estoque > 9999 ? 9999 : estoque;
+					estoque = estoque.equals(0) ? 0 : estoque;
+					produtoQueroDeliveryFeignClient.atualizarEstoqueProduto(new ProdutoAtualizarEstoqueDTO(estoque), produtoQD.get().getCodBarra(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+					produtoQueroDeliveryService.atualizarEstoque(param.getCodLoja(), estoque, produtoConsinco.getCodBarras());
+					logIntegracaoQueroDeliveryService.salvarLog(new LogIntegracaoQueroDelivery(new Date(), TipoLogIntegracaoEnum.ATUALIZAR_ESTOQUE_PRODUTO,"Estoque Atualizado. Valor antigo: " + produtoQD.get().getQtdEstoque() + "/ Valor novo: " + estoqueConsinco, produtoQD.get().getCodBarra(), null, produtoQD.get().getNomeProduto(),param.getAmbiente(), param.getCodLoja()));
+					if(estoque.equals(0)) {
+						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_OCULTO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+					}else {
+						produtoQueroDeliveryFeignClient.atualizarStatusProduto(new ProdutoAtualizarStatusDTO(STATUS_ATIVO), produtoConsinco.getCodBarras(),param.getPlaceId(),param.getToken(),URI.create(param.getUrl()));
+					}
+			 }
 		}
 	}
 	

@@ -7,4 +7,6 @@ public interface IntegracaoQueroDeliveryService {
 	void integrarDadosQueroDelivery(ParametrizacaoAmbienteDTO param);
 	
 	void executarJobIntegracao();
+	
+	void atualizarEstoque();
 }

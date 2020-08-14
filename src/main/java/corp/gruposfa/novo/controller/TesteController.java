@@ -16,18 +16,10 @@ import corp.gruposfa.novo.service.TesteService;
 @RequestMapping("/api/teste")
 public class TesteController {
 	
-	private final TesteService service;
-	
-	private final NotaFiscalService notaFiscalRepository;
-	
-	private final CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient;
 	
 	private final ServicoIntegracaoFeignClient servicoIntegracaoFeignClient;
 	
-	public TesteController(TesteService service,NotaFiscalService notaFiscalRepository,CategoriaQueroDeliveryFeignClient categoriaQueroDeliveryFeignClient,ServicoIntegracaoFeignClient servicoIntegracaoFeignClient) {
-		this.service = service;
-		this.notaFiscalRepository = notaFiscalRepository;
-		this.categoriaQueroDeliveryFeignClient = categoriaQueroDeliveryFeignClient;
+	public TesteController(ServicoIntegracaoFeignClient servicoIntegracaoFeignClient) {
 		this.servicoIntegracaoFeignClient = servicoIntegracaoFeignClient;
 	}
 

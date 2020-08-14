@@ -23,5 +23,10 @@ public class QueroDeliveryController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@PostMapping("/executar-atualizacao-estoque")
+	public ResponseEntity<?> executarAtualizacaoEstoque() {
+		integracaoQueroDeliveryService.atualizarEstoque();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 }
