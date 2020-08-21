@@ -1,4 +1,4 @@
-package corp.gruposfa.novo.security;
+package corp.gruposfa.example.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

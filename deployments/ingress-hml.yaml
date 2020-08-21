@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: api-novo-hml
+  name: api-example-hml
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   labels:
-    run: api-novo-hml
+    run: api-example-hml
 spec:
   rules:
-  - host: hml-api-novo.gruposfa.com.br
+  - host: hml-api-example.gruposfa.com.br
     http:
       paths:
       - backend:
-          serviceName: api-novo-hml
+          serviceName: api-example-hml
           servicePort: 80

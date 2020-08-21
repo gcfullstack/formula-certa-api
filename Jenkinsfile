@@ -1,9 +1,9 @@
-def appName = 'api-novo'
-def appNameHml = 'api-novo-hml'
+def appName = 'api-example'
+def appNameHml = 'api-example-hml'
 def imageVersion = "$BUILD_NUMBER"
-def namespace = 'api-novo'
-def namespaceHml = 'api-novo-hml'
-def deploymentpath = '~/deployments/api-novo'
+def namespace = 'api-example'
+def namespaceHml = 'api-example-hml'
+def deploymentpath = '~/deployments/api-example'
 def imageTag = "srv-docker.sfa.local:5000/${appName}:${imageVersion}"
 def imageTagHml = "srv-docker.sfa.local:5000/${appNameHml}:${imageVersion}"
 

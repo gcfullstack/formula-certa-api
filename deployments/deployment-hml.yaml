@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-novo-hml
+  name: api-example-hml
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: api-novo-hml
+      run: api-example-hml
   template:
     metadata:
         labels:
-          run: api-novo-hml
+          run: api-example-hml
     spec:
       containers:
-        - name: api-novo-hml
-          image: srv-docker.sfa.local:5000/api-novo-hml:development
+        - name: api-example-hml
+          image: srv-docker.sfa.local:5000/api-example-hml:development
           ports:
           - containerPort: 8080
           volumeMounts:

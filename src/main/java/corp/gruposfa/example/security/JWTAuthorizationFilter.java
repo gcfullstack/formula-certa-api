@@ -1,4 +1,4 @@
-package corp.gruposfa.novo.security;
+package corp.gruposfa.example.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
