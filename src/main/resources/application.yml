@@ -3,6 +3,11 @@ spring:
         active: @spring.profiles.active@
     main:
         allow-bean-definition-overriding: true            
-    
+    datasource:
+        hikari:
+            minimum-idle: 1
+            maximum-pool-size: 5
+            pool-name: yourPoolName
+            auto-commit: false
         
  

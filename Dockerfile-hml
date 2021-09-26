@@ -1,9 +1,0 @@
-FROM adoptopenjdk/openjdk11:latest
-#FROM tomcat:9-jre8
-MAINTAINER SFA
-# COPY path-to-your-application-war path-to-webapps-in-docker-tomcat
-RUN mkdir -p /mnt/sfa-fs-app
-RUN mkdir -p /opt/app
-#ADD target/api-example.jar /usr/local/tomcat/webapps/
-ADD target/api-example.jar /opt/app
-CMD ["java", "-Dspring.profiles.active=hml", "-jar", "/opt/app/api-example.jar"]
