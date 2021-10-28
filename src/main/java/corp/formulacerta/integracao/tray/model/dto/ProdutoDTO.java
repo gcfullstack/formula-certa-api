@@ -110,7 +110,7 @@ public class ProdutoDTO {
 	public ProdutoDTO(OrcTrail orc) {
 		super();
 		this.name = orc.getDescricaoSimples();
-		this.description = "Forma Farmaceutica:" + orc.getFormaFarmaceutica() + "- Tratamento: " + orc.getTratamento() + " - Quantidade: "  + orc.getQuantidade() + " - Unidade: " + orc.getUnidade() + " - Cód.Filial: " + orc.getCodFilial() + " - Data Entrada: " + orc.getDataEntrada() + " - Cód.Cliente: " + orc.getCodCliente() + " - Cód. Forma Farmacêutica: " + orc.getCodFormaFarmaceutica() + " - Cód. Funcionário: " + orc.getCodFuncionario();
+		this.description = "Forma Farmaceutica:" + orc.getFormaFarmaceutica() + "- Tratamento: " + orc.getTratamento() + " - Quantidade: "  + orc.getQuantidade() + " - Unidade: " + orc.getUnidade() + " - Cód.Filial: " + orc.getCodFilial() + " - Data Entrada: " + MethodsUtils.formatarDataString(orc.getDataEntrada(), ConstantsUtils.DATE_FORMAT_DD_MM_YYYY_BAR) + " - Cód.Cliente: " + orc.getCodCliente() + " - Cód. Forma Farmacêutica: " + orc.getCodFormaFarmaceutica() + " - Cód. Funcionário: " + orc.getCodFuncionario();
 		this.descriptionSmall = orc.getDescricaoSimples();
 		this.price = orc.getPreco();
 		this.costPrice = orc.getPreco();
