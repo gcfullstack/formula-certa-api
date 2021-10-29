@@ -1,2 +1,2 @@
 # formula-certa-api
-Backend Formula Certa
+Compilar o projeto: mvn clean install
