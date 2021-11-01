@@ -40,7 +40,6 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	public void executarIntegracao() {
 		Integer lastIdImported = logConsultaFormulaCertaService.findLastIdImported();
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoBiggerThanCustomID(lastIdImported);
-	System.out.println(orcamentos.size());
 		if(!orcamentos.isEmpty()) {
 			for (OrcamentoDTO orc : orcamentos) {
 				OrcTrail orcTray = new OrcTrail(orc);
