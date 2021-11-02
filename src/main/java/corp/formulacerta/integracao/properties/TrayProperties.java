@@ -12,6 +12,8 @@ public class TrayProperties {
 	private String code;
 
 	private String url;
+	
+	private String environment;
 
 	public String getConsumerKey() {
 		return consumerKey;
@@ -44,5 +46,15 @@ public class TrayProperties {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String environment) {
+		this.environment = environment;
+	}
+	
+	
 
 }

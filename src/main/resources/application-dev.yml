@@ -48,4 +48,5 @@ application:
         consumer_secret: ca73ba70cc6fa150b404a27f167bb867175117abca1264f943444e20eed6a99b
         code: 9ffa93a74c46e0781747c8421fc10870dcc174b2347e42fcd751f2535054e5be   
         url: https://isotec.commercesuite.com.br/web_api/
+        environment: dev
           

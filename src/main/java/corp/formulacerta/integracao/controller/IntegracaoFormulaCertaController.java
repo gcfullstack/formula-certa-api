@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
+import corp.formulacerta.integracao.properties.TrayProperties;
 import corp.formulacerta.integracao.service.IntegradorFormulaCertaService;
 import corp.formulacerta.integracao.service.OrcamentoFormulaCertaService;
 
@@ -21,10 +22,13 @@ public class IntegracaoFormulaCertaController {
 	
 	private final OrcamentoFormulaCertaService orcamentoFormulaCertaService;
 	
-	public IntegracaoFormulaCertaController(IntegradorFormulaCertaService service,OrcamentoFormulaCertaService orcamentoFormulaCertaService) {
+	private final TrayProperties trayProperties;
+	
+	public IntegracaoFormulaCertaController(IntegradorFormulaCertaService service,OrcamentoFormulaCertaService orcamentoFormulaCertaService, TrayProperties trayProperties) {
 		super();
 		this.service = service;
 		this.orcamentoFormulaCertaService = orcamentoFormulaCertaService;
+		this.trayProperties = trayProperties;
 	}
 
 
@@ -36,7 +40,7 @@ public class IntegracaoFormulaCertaController {
 	
 	@GetMapping
 	public ResponseEntity<?> ok(){
-		System.out.println("working");
+		System.out.println(trayProperties.getEnvironment());
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoBiggerThanCustomID(975413);
 		return  ResponseEntity.ok(orcamentos);
 	}
