@@ -25,6 +25,8 @@ public class OrcamentoDTO {
 
 	private String unidade;
 
+	private String nomeFuncionario;
+	
 	private Integer codFuncionario;
 
 	private String formaFarmaceutica;
@@ -55,8 +57,9 @@ public class OrcamentoDTO {
 		super();
 	}
 	
-	public OrcamentoDTO(Integer numeroOrcamento, String descricaoSimples, Integer codFormaFarmaceutica, String formaFarmaceutica, BigDecimal preco, BigDecimal precoOferta, Date dataEntrada, BigDecimal quantidade, String unidade, String idProdutoTray) {
+	public OrcamentoDTO(Integer numeroOrcamento, String nomeFuncionario, String descricaoSimples, Integer codFormaFarmaceutica, String formaFarmaceutica, BigDecimal preco, BigDecimal precoOferta, Date dataEntrada, BigDecimal quantidade, String unidade, String idProdutoTray) {
 		this.numOrcamento = numeroOrcamento;
+		this.nomeFuncionario = nomeFuncionario;
 		this.descricaoSimples = descricaoSimples;
 		this.codFormaFarmaceutica = codFormaFarmaceutica;
 		this.formaFarmaceutica = formaFarmaceutica;
@@ -79,6 +82,7 @@ public class OrcamentoDTO {
 		this.codCliente = orcamentoInterface.getCodCliente();
 		this.quantidade = orcamentoInterface.getQuantidade();
 		this.unidade = orcamentoInterface.getUnidade();
+		this.nomeFuncionario = orcamentoInterface.getNomeFuncionario();
 		this.codFuncionario = orcamentoInterface.getCodFuncionario();
 		this.formaFarmaceutica = orcamentoInterface.getFormaFarmaceutica();
 		this.tratamento = orcamentoInterface.getTratamento();
@@ -276,6 +280,14 @@ public class OrcamentoDTO {
 	public void setIdProdutoTray(String idProdutoTray) {
 		this.idProdutoTray = idProdutoTray;
 	}
+	
+	public String getNomeFuncionario() {
+		return nomeFuncionario;
+	}
+
+	public void setNomeFuncionario(String nomeFuncionario) {
+		this.nomeFuncionario = nomeFuncionario;
+	}
 
 	public interface OrcamentoInterfaceDTO {
 		public String getDescricaoSimples();
@@ -297,6 +309,8 @@ public class OrcamentoDTO {
 		public BigDecimal getQuantidade();
 
 		public String getUnidade();
+		
+		public String getNomeFuncionario();
 
 		public Integer getCodFuncionario();
 

@@ -53,6 +53,9 @@ public class OrcTrail implements Serializable {
 
 	@Column(name = "UNIDADE")
 	private String unidade;
+	
+	@Column(name = "NOME_FUNCIONARIO")
+	private String nomeFuncionario;
 
 	@Column(name = "COD_FUNCIONARIO")
 	private Integer codFuncionario;
@@ -108,6 +111,7 @@ public class OrcTrail implements Serializable {
 		this.codCliente = dto.getCodCliente();
 		this.quantidade = dto.getQuantidade();
 		this.unidade = dto.getUnidade();
+		this.nomeFuncionario = dto.getNomeFuncionario();
 		this.codFuncionario = dto.getCodFuncionario();
 		this.formaFarmaceutica = dto.getFormaFarmaceutica();
 		this.tratamento = dto.getTratamento();
@@ -313,9 +317,15 @@ public class OrcTrail implements Serializable {
 	public void setIdProdutoTray(String idProdutoTray) {
 		this.idProdutoTray = idProdutoTray;
 	}
+	
+	public String getNomeFuncionario() {
+		return nomeFuncionario;
+	}
 
-
-
+	public void setNomeFuncionario(String nomeFuncionario) {
+		this.nomeFuncionario = nomeFuncionario;
+	}
+	
 	public interface OrcamentoInterfaceDTO {
 		public Integer getId();
 		
@@ -330,13 +340,15 @@ public class OrcTrail implements Serializable {
 		public Integer getNumOrcamento();
 
 		public Date getDataEntrada();
-
+		
 		public Integer getCodCliente();
 
 		public BigDecimal getQuantidade();
 
 		public String getUnidade();
 
+		public String getNomeFuncionario();
+		
 		public Integer getCodFuncionario();
 
 		public String getFormaFarmaceutica();

@@ -15,7 +15,7 @@ import feign.Param;
 @Repository
 public interface OrcTrailRepository extends JpaRepository<OrcTrail, Integer> {
 
-	@Query("select new corp.formulacerta.integracao.model.dto.OrcamentoDTO(o.numOrcamento, o.descricaoSimples, o.codFormaFarmaceutica, o.formaFarmaceutica, o.preco, o.precoOferta, o.dataEntrada, o.quantidade, o.unidade, o.idProdutoTray) from OrcTrail o")
+	@Query("select new corp.formulacerta.integracao.model.dto.OrcamentoDTO(o.numOrcamento, o.nomeFuncionario, o.descricaoSimples, o.codFormaFarmaceutica, o.formaFarmaceutica, o.preco, o.precoOferta, o.dataEntrada, o.quantidade, o.unidade, o.idProdutoTray) from OrcTrail o order by o.id desc")
 	List<OrcamentoDTO> buscarTodos();
 	
 	@Modifying
