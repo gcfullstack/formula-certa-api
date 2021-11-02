@@ -3,4 +3,48 @@ spring:
         active: prod
     main:
         allow-bean-definition-overriding: true
+    datasource:
+        jdbc-url: jdbc:firebirdsql://179.124.11.201:3050/C:\\fcerta\\db\\alterdb.ib?useUnicode=yes&characterEncoding=UTF-8
+        username: SYSDBA
+        password: masterkey
+        driverClassName: org.firebirdsql.jdbc.FBDriver
+        type: com.zaxxer.hikari.HikariDataSource
+        maximum-pool-size: 20
+        minimum-idle: 10
+        pool-name: attive-pool
+        connection-timeout: 90000
+        connection-test-query: SELECT 1 FROM FC15000
+        max-lifetime: 240000
+    datasource-mirror:
+        jdbc-url: jdbc:mysql://doadmin:7vqXgUqK-pK-a4WR@db-mysql-attive-do-user-9854574-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED
+        username: doadmin
+        password: 7vqXgUqK-pK-a4WR
+        driverClassName: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            ddl-auto: none
+    properties:
+        hibernate:
+            show_sql: true
+            use_sql_comments: true
+            format_sql: true
+            
+        
+server:
+    port: 8080       
+    
+logging:
+    level:
+        org.hibernate.SQL: DEBUG    
+        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+        com.zaxxer.hikari.HikariConfig: DEBUG 
+        com.zaxxer.hikari: TRACE      
+
+application:
+    tray:
+        consumer_key: 11912e02e762f4bc1d3f24a724cccb16ac9010cddeb489b2f76b918f9be93233 
+        consumer_secret: ca73ba70cc6fa150b404a27f167bb867175117abca1264f943444e20eed6a99b
+        code: 9ffa93a74c46e0781747c8421fc10870dcc174b2347e42fcd751f2535054e5be   
+        url: https://isotec.commercesuite.com.br/web_api/
+               
  

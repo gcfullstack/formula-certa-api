@@ -281,12 +281,6 @@
 				<spring.profiles.active>prod</spring.profiles.active>
 			</properties>
 		</profile>
-		<profile>
-			<id>hml</id>
-			<properties>
-				<spring.profiles.active>hml</spring.profiles.active>
-			</properties>
-		</profile>
 	</profiles>
 
 </project>

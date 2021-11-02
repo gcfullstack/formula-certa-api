@@ -43,7 +43,7 @@ public class FormulaCertaDataSourceConfig {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 		HashMap<String, Object> properties = new HashMap<>();
-		properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+		properties.put("hibernate.hbm2ddl.auto", "none");
 		properties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
 		/*properties.put("hikari.max-lifetime", "1800000");
 		properties.put("hikari.connection-timeout", "1800000");
