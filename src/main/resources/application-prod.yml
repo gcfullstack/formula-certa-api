@@ -16,7 +16,7 @@ spring:
         connection-test-query: SELECT 1 FROM FC15000
         max-lifetime: 240000
     datasource-mirror:
-        jdbc-url: jdbc:mysql://doadmin:7vqXgUqK-pK-a4WR@db-mysql-attive-do-user-9854574-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED
+        jdbc-url: jdbc:mysql://doadmin:7vqXgUqK-pK-a4WR@db-mysql-attive-do-user-9854574-0.b.db.ondigitalocean.com:25060/defaultdb?ssl-mode=REQUIRED&serverTimezone=GMT-3
         username: doadmin
         password: 7vqXgUqK-pK-a4WR
         driverClassName: com.mysql.cj.jdbc.Driver
