@@ -1,5 +1,7 @@
 package corp.formulacerta.integracao.mirror.service.impl;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 import corp.formulacerta.integracao.mirror.model.LogConsultaFormulaCerta;
@@ -16,11 +18,11 @@ public class LogConsultaFormulaCertaServiceImpl implements LogConsultaFormulaCer
 	}
 
 	@Override
-	public Integer findLastIdImported() {
+	public Date findLastDataCadastroImported() {
 		try {
-			return logConsultaFormulaCertaRepository.findTopByOrderByIdDesc().getLastImportedId();
+			return logConsultaFormulaCertaRepository.findTopByOrderByIdDesc().getLastDataCadastro();
 		} catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro ao buscar o ultimo id importado");
+			throw new RuntimeException("Ocorreu um erro ao buscar a ultima data de cadastro importada");
 		}
 	}
 

@@ -18,6 +18,8 @@ public class OrcamentoDTO {
 	private Integer numOrcamento;
 
 	private Date dataEntrada;
+	
+	private Date dataCadastro;
 
 	private Integer codCliente;
 
@@ -57,7 +59,7 @@ public class OrcamentoDTO {
 		super();
 	}
 	
-	public OrcamentoDTO(Integer numeroOrcamento, String nomeFuncionario, String descricaoSimples, Integer codFormaFarmaceutica, String formaFarmaceutica, BigDecimal preco, BigDecimal precoOferta, Date dataEntrada, BigDecimal quantidade, String unidade, String idProdutoTray) {
+	public OrcamentoDTO(Integer numeroOrcamento, String nomeFuncionario, String descricaoSimples, Integer codFormaFarmaceutica, String formaFarmaceutica, BigDecimal preco, BigDecimal precoOferta, Date dataEntrada, Date dataCadastro, BigDecimal quantidade, String unidade, String idProdutoTray) {
 		this.numOrcamento = numeroOrcamento;
 		this.nomeFuncionario = nomeFuncionario;
 		this.descricaoSimples = descricaoSimples;
@@ -66,6 +68,7 @@ public class OrcamentoDTO {
 		this.preco = preco;
 		this.precoOferta = precoOferta;
 		this.dataEntrada = dataEntrada;
+		this.dataCadastro = dataCadastro;
 		this.quantidade = quantidade;
 		this.unidade = unidade;
 		this.idProdutoTray = idProdutoTray;
@@ -79,6 +82,7 @@ public class OrcamentoDTO {
 		this.precoOferta = orcamentoInterface.getPrecoOferta();
 		this.numOrcamento = orcamentoInterface.getNumOrcamento();
 		this.dataEntrada = orcamentoInterface.getDataEntrada();
+		this.dataCadastro = orcamentoInterface.getDataCadastro();
 		this.codCliente = orcamentoInterface.getCodCliente();
 		this.quantidade = orcamentoInterface.getQuantidade();
 		this.unidade = orcamentoInterface.getUnidade();
@@ -288,6 +292,14 @@ public class OrcamentoDTO {
 	public void setNomeFuncionario(String nomeFuncionario) {
 		this.nomeFuncionario = nomeFuncionario;
 	}
+	
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
 
 	public interface OrcamentoInterfaceDTO {
 		public String getDescricaoSimples();
@@ -303,6 +315,8 @@ public class OrcamentoDTO {
 		public Integer getNumOrcamento();
 
 		public Date getDataEntrada();
+		
+		public Date getDataCadastro();
 
 		public Integer getCodCliente();
 

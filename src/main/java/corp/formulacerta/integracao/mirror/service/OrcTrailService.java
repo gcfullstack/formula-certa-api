@@ -1,5 +1,6 @@
 package corp.formulacerta.integracao.mirror.service;
 
+import java.util.Date;
 import java.util.List;
 
 import corp.formulacerta.integracao.mirror.model.OrcTrail;
@@ -12,5 +13,7 @@ public interface OrcTrailService {
 	List<OrcamentoDTO> findAll();
 	
 	void updateIdProdutoTray(Integer id, String idProdutoTray);
+	
+	List<Integer> buscarNumOrcamentosPorData(Date data);
 	
 }

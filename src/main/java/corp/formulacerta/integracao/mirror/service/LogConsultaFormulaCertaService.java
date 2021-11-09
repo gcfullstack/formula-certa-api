@@ -1,10 +1,12 @@
 package corp.formulacerta.integracao.mirror.service;
 
+import java.util.Date;
+
 import corp.formulacerta.integracao.mirror.model.LogConsultaFormulaCerta;
 
 public interface LogConsultaFormulaCertaService {
 
-	Integer findLastIdImported();
+	Date findLastDataCadastroImported();
 	
 	void saveLog(LogConsultaFormulaCerta log);
 	

@@ -1,5 +1,6 @@
 package corp.formulacerta.integracao.mirror.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,8 @@ import corp.formulacerta.integracao.mirror.model.OrcTrail;
 import corp.formulacerta.integracao.mirror.repository.OrcTrailRepository;
 import corp.formulacerta.integracao.mirror.service.OrcTrailService;
 import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
+import corp.formulacerta.integracao.utils.ConstantsUtils;
+import corp.formulacerta.integracao.utils.MethodsUtils;
 
 @Service
 public class OrcTrailServiceImpl implements OrcTrailService {
@@ -32,5 +35,9 @@ public class OrcTrailServiceImpl implements OrcTrailService {
 		orcTrailRepository.updateIdProdutoTray(idOrc, idProdutoTray);
 	}
 
+	@Override
+	public List<Integer> buscarNumOrcamentosPorData(Date data) {
+		return orcTrailRepository.buscarNumOrcamentosPorData(MethodsUtils.formatarDataString(data, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD));
+	}
 
 }

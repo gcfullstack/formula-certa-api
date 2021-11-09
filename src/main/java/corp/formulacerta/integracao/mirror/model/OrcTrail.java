@@ -44,6 +44,9 @@ public class OrcTrail implements Serializable {
 
 	@Column(name = "DATA_ENTRADA")
 	private Date dataEntrada;
+	
+	@Column(name = "DATA_CADASTRO_FORMULA_CERTA")
+	private Date dataCadastroFormulaCerta;
 
 	@Column(name = "COD_CLIENTE")
 	private Integer codCliente;
@@ -124,6 +127,7 @@ public class OrcTrail implements Serializable {
 		this.altura = dto.getAltura();
 		this.estoqueAtual = dto.getEstoqueAtual();
 		this.categoria = dto.getCategoria();
+		this.dataCadastroFormulaCerta = dto.getDataCadastro();
 	}
 
 	public Integer getId() {

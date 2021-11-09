@@ -27,17 +27,17 @@ public class LogConsultaFormulaCerta implements Serializable {
 	@Column(name = "RECORD_FOUND")
 	private Boolean recordFound;
 
-	@Column(name = "LAST_IMPORTED_ID")
-	private Integer lastImportedId;
-	
+	@Column(name = "LAST_DT_CADASTRO")
+	private Date lastDataCadastro;
+
 	public LogConsultaFormulaCerta() {
 		super();
 	}
 
-	public LogConsultaFormulaCerta(Date dataExec, Boolean recordFound, Integer lastImportedId) {
+	public LogConsultaFormulaCerta(Date dataExec, Boolean recordFound, Date lastDataCadastro) {
 		this.dataExec = dataExec;
 		this.recordFound = recordFound;
-		this.lastImportedId = lastImportedId;
+		this.lastDataCadastro = lastDataCadastro;
 	}
 
 	public Integer getId() {
@@ -64,15 +64,15 @@ public class LogConsultaFormulaCerta implements Serializable {
 		this.recordFound = recordFound;
 	}
 
-	public Integer getLastImportedId() {
-		return lastImportedId;
+	public Date getLastDataCadastro() {
+		return lastDataCadastro;
 	}
 
-	public void setLastImportedId(Integer lastImportedId) {
-		this.lastImportedId = lastImportedId;
+	public void setLastDataCadastro(Date lastDataCadastro) {
+		this.lastDataCadastro = lastDataCadastro;
 	}
 
-	public interface OnlyLastImportedIdInterface {
-		Integer getLastImportedId();
+	public interface LastImportedDataCadastroInterface {
+		Date getLastDataCadastro();
 	}
 }

@@ -38,8 +38,9 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 
 	@Override
 	public void executarIntegracao() {
-		Integer lastIdImported = logConsultaFormulaCertaService.findLastIdImported();
-		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoBiggerThanCustomID(lastIdImported);
+		Date lastDataCadastroImported = logConsultaFormulaCertaService.findLastDataCadastroImported();
+		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByLastDataCadastro(lastDataCadastroImported);
+		System.out.println("Log info: Orçamentos para integrar: " + orcamentos.size() );
 		if(!orcamentos.isEmpty()) {
 			for (OrcamentoDTO orc : orcamentos) {
 				OrcTrail orcTray = new OrcTrail(orc);
@@ -48,14 +49,48 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 				orcTrailService.updateIdProdutoTray(orcSaved.getId(), produtoIntegrado.getId());
 			}
 		}
-		logConsultaFormulaCertaService.saveLog(getLogObject(orcamentos, lastIdImported));
+		logConsultaFormulaCertaService.saveLog(getLogObject(orcamentos, lastDataCadastroImported));
 	}
 	
-	private LogConsultaFormulaCerta getLogObject(List<OrcamentoDTO> orcamentos, Integer lastIdImported) {
+	/*@Override
+	public void executarIntegracao2(Date data) {
+		List<Integer> idsOrcamentosParaIntegrar = new ArrayList<>();
+		List<Integer> orcamentosNaoIntegradosDaData = orcamentoFormulaCertaService.findNrOrcsPorData(data);
+		
+		if(orcamentosNaoIntegradosDaData.isEmpty()) {
+			return;
+		}
+		
+		List<Integer> orcamentosIntegradosDaData = orcTrailService.buscarNumOrcamentosPorData(data);
+		
+		if(orcamentosIntegradosDaData.isEmpty()) {
+			idsOrcamentosParaIntegrar.addAll(orcamentosNaoIntegradosDaData);
+		}else {
+			idsOrcamentosParaIntegrar = orcamentosNaoIntegradosDaData.stream().filter(p -> !orcamentosIntegradosDaData.contains(p)).collect(Collectors.toList());
+		}
+		
+		for (Integer integer : idsOrcamentosParaIntegrar) {
+			System.out.println(integer+",");
+		}
+		
+		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByNrOrcs(idsOrcamentosParaIntegrar);
+		
+		if(!orcamentos.isEmpty()) {
+			for (OrcamentoDTO orc : orcamentos) {
+				OrcTrail orcTray = new OrcTrail(orc);
+				OrcTrail orcSaved = orcTrailService.saveEntity(orcTray);
+				ProdutoCriadoDTO produtoIntegrado = produtoService.cadastrarProduto(new ProdutoDTO(orcTray));
+				orcTrailService.updateIdProdutoTray(orcSaved.getId(), produtoIntegrado.getId());
+			}
+		}
+		//logConsultaFormulaCertaService.saveLog(getLogObject(orcamentos, 000));
+	}*/
+	
+	private LogConsultaFormulaCerta getLogObject(List<OrcamentoDTO> orcamentos, Date lastDataCadastro) {
 		LogConsultaFormulaCerta log = new LogConsultaFormulaCerta();
 		log.setDataExec(new Date());
 		log.setRecordFound(!orcamentos.isEmpty());
-		log.setLastImportedId(orcamentos.isEmpty() ? lastIdImported : orcamentos.get(orcamentos.size()-1).getNumOrcamento());
+		log.setLastDataCadastro(orcamentos.isEmpty() ? lastDataCadastro : orcamentos.get(orcamentos.size()-1).getDataCadastro());
 		return log;
 	}
 
