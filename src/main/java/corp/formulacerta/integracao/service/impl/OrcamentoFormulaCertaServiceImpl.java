@@ -46,4 +46,9 @@ public class OrcamentoFormulaCertaServiceImpl implements OrcamentoFormulaCertaSe
 		return orcamentoFormulaCertaRepository.findOrcamentoByNrOrcs(nrOrcs).stream().map(orc -> new OrcamentoDTO(orc)).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<String> buscarSubstanciasDoOrcamento(Integer numOrc, Integer codFilial, String serie) {
+		return orcamentoFormulaCertaRepository.buscarSubstanciasDoOrcamento(numOrc, codFilial, serie);
+	}
+
 }

@@ -10,6 +10,8 @@ public class OrcamentoDTO {
 	private String descricaoCompleta;
 
 	private Integer codFilial;
+	
+	private String serie;
 
 	private BigDecimal preco;
 
@@ -99,6 +101,7 @@ public class OrcamentoDTO {
 		this.altura = orcamentoInterface.getAltura();
 		this.estoqueAtual = orcamentoInterface.getEstoqueAtual();
 		this.categoria = orcamentoInterface.getCategoria();
+		this.serie = orcamentoInterface.getSerie();
 	}
 
 	public String getDescricaoSimples() {
@@ -300,6 +303,16 @@ public class OrcamentoDTO {
 	public void setDataCadastro(Date dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
+	
+	public String getSerie() {
+		return serie;
+	}
+
+	public void setSerie(String serie) {
+		this.serie = serie;
+	}
+
+
 
 	public interface OrcamentoInterfaceDTO {
 		public String getDescricaoSimples();
@@ -349,6 +362,8 @@ public class OrcamentoDTO {
 		public Integer getEstoqueAtual();
 
 		public String getCategoria();
+		
+		public String getSerie();
 	}
 
 }

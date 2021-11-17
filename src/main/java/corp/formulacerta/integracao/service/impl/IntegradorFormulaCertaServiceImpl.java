@@ -2,6 +2,10 @@ package corp.formulacerta.integracao.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,8 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	private final OrcTrailService orcTrailService;
 	
 	private final ProdutoService produtoService;
+	
+	private static final Logger logger = Logger.getLogger(IntegradorFormulaCertaServiceImpl.class.getName());
 
 	public IntegradorFormulaCertaServiceImpl(LogConsultaFormulaCertaService logConsultaFormulaCertaService,
 			OrcamentoFormulaCertaService orcamentoFormulaCertaService, OrcTrailService orcTrailService,ProdutoService produtoService) {
@@ -38,11 +44,19 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 
 	@Override
 	public void executarIntegracao() {
+		Handler handlerObj = new ConsoleHandler();
+		handlerObj.setLevel(Level.ALL);
+		logger.addHandler(handlerObj);
+		logger.setLevel(Level.ALL);
+		logger.setUseParentHandlers(false);
 		Date lastDataCadastroImported = logConsultaFormulaCertaService.findLastDataCadastroImported();
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByLastDataCadastro(lastDataCadastroImported);
-		System.out.println("Log info: Orçamentos para integrar: " + orcamentos.size() );
+		logger.log(Level.FINE, "{0} Orçamentos para integrar", orcamentos.size() );
 		if(!orcamentos.isEmpty()) {
 			for (OrcamentoDTO orc : orcamentos) {
+				List<String> substancias = orcamentoFormulaCertaService.buscarSubstanciasDoOrcamento(orc.getNumOrcamento(), orc.getCodFilial(), orc.getSerie());
+				orc.setDescricaoCompleta(String.join(",", substancias));
+				orc.setDescricaoSimples("Produto: " + (Integer.parseInt(orc.getSerie()) + 1));
 				OrcTrail orcTray = new OrcTrail(orc);
 				OrcTrail orcSaved = orcTrailService.saveEntity(orcTray);
 				ProdutoCriadoDTO produtoIntegrado = produtoService.cadastrarProduto(new ProdutoDTO(orcTray));

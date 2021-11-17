@@ -110,8 +110,8 @@ public class ProdutoDTO {
 	public ProdutoDTO(OrcTrail orc) {
 		super();
 		this.name = orc.getDescricaoSimples();
-		this.description = "Forma Farmaceutica:" + orc.getFormaFarmaceutica() + "- Tratamento: " + orc.getTratamento() + " - Quantidade: "  + orc.getQuantidade() + " - Unidade: " + orc.getUnidade() + " - Cód.Filial: " + orc.getCodFilial() + " - Data Entrada: " + MethodsUtils.formatarDataString(orc.getDataEntrada(), ConstantsUtils.DATE_FORMAT_DD_MM_YYYY_BAR) + " - Cód.Cliente: " + orc.getCodCliente() + " - Cód. Forma Farmacêutica: " + orc.getCodFormaFarmaceutica() + " - Cód. Funcionário: " + orc.getCodFuncionario();
-		this.descriptionSmall = orc.getDescricaoSimples();
+		this.description = orc.getDescricaoCompleta();
+		this.descriptionSmall = "Forma Farmaceutica:" + orc.getFormaFarmaceutica() + "- Tratamento: " + orc.getTratamento() +/* " - Quantidade: "  + orc.getQuantidade() + " - Unidade: " + orc.getUnidade() + */" - Cód.Filial: " + orc.getCodFilial() + " - Data Entrada: " + MethodsUtils.formatarDataString(orc.getDataEntrada(), ConstantsUtils.DATE_FORMAT_DD_MM_YYYY_BAR) + " - Cód.Cliente: " + (orc.getCodCliente() != null ? orc.getCodCliente() : "") + " - Cód. Forma Farmacêutica: " + orc.getCodFormaFarmaceutica() + " - Cód. Funcionário: " + orc.getCodFuncionario();
 		this.price = orc.getPreco();
 		this.costPrice = orc.getPreco();
 		this.promotionalPrice = orc.getPrecoOferta();
@@ -121,7 +121,8 @@ public class ProdutoDTO {
 		this.length = orc.getComprimento().intValue();
 		this.width = orc.getLargura().intValue();
 		this.height = orc.getAltura().intValue();
-		this.stock = orc.getQuantidade().intValue();
+		// TODO: quantidade nao esta definido
+		this.stock = 1;//orc.getQuantidade().intValue();
 		this.categoryId = ConstantsUtils.ID_CATEGORIA_TRAY;
 		this.available = orc.getDisponivel().equals("SIM") ? 1 : 0;
 		this.availability = "3";
