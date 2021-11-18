@@ -104,7 +104,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 		LogConsultaFormulaCerta log = new LogConsultaFormulaCerta();
 		log.setDataExec(new Date());
 		log.setRecordFound(!orcamentos.isEmpty());
-		log.setLastDataCadastro(orcamentos.isEmpty() ? lastDataCadastro : orcamentos.get(orcamentos.size()-1).getDataCadastro());
+		log.setLastDataCadastro(orcamentos.isEmpty() ? lastDataCadastro : orcamentos.get(0).getDataCadastro());
 		return log;
 	}
 
