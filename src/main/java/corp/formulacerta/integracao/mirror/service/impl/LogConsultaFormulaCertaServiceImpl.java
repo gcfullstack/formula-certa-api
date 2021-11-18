@@ -20,7 +20,7 @@ public class LogConsultaFormulaCertaServiceImpl implements LogConsultaFormulaCer
 	@Override
 	public Date findLastDataCadastroImported() {
 		try {
-			return logConsultaFormulaCertaRepository.findTopByOrderByIdDesc().getLastDataCadastro();
+			return logConsultaFormulaCertaRepository.findTopByOrderByIdDesc2();
 		} catch (Exception e) {
 			throw new RuntimeException("Ocorreu um erro ao buscar a ultima data de cadastro importada");
 		}
