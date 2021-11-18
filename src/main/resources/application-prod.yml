@@ -4,7 +4,7 @@ spring:
     main:
         allow-bean-definition-overriding: true
     datasource:
-        jdbc-url: jdbc:firebirdsql://179.124.11.201:3050/C:\\fcerta\\db\\alterdb.ib?useUnicode=yes&characterEncoding=UTF-8
+        jdbc-url: jdbc:firebirdsql://179.124.11.201:3050/C:\\fcerta\\db\\alterdb.ib?useUnicode=yes&characterEncoding=UTF-8&serverTimezone=GMT-3
         username: SYSDBA
         password: masterkey
         driverClassName: org.firebirdsql.jdbc.FBDriver
