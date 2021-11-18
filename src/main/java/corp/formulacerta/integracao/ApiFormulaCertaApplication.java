@@ -1,5 +1,9 @@
 package corp.formulacerta.integracao;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,6 +39,12 @@ public class ApiFormulaCertaApplication {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+    
+    @PostConstruct
+	void started() {
+	    TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
+	}
+
     
 
 }
