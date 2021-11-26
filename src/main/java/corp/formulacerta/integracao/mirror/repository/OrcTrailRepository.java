@@ -26,4 +26,7 @@ public interface OrcTrailRepository extends JpaRepository<OrcTrail, Integer> {
 	@Query(value = "select NUM_ORCAMENTO from ORCAMENTO where DATA_ENTRADA = :data", nativeQuery = true)
 	List<Integer> buscarNumOrcamentosPorData(@Param("data") String data);
 	
+	@Query("select o from OrcTrail o order by o.id desc")
+	List<OrcTrail> findAll();
+	
 }

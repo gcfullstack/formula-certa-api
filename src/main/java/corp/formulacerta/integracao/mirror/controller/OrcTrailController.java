@@ -19,6 +19,14 @@ public class OrcTrailController {
 	}
 
 	@GetMapping
+	public ResponseEntity<?> buscarTodos() {
+		return ResponseEntity.ok(orcTrailService.buscarTodos());
+	}
+	
+	/**
+	 * Esse endpoint traz todas as colunas do banco
+	 */
+	@GetMapping("/all")
 	public ResponseEntity<?> findAll() {
 		return ResponseEntity.ok(orcTrailService.findAll());
 	}

@@ -10,10 +10,11 @@ public interface OrcTrailService {
 
 	OrcTrail saveEntity(OrcTrail orc);
 	
-	List<OrcamentoDTO> findAll();
+	List<OrcamentoDTO> buscarTodos();
 	
 	void updateIdProdutoTray(Integer id, String idProdutoTray);
 	
 	List<Integer> buscarNumOrcamentosPorData(Date data);
 	
+	List<OrcTrail> findAll();
 }

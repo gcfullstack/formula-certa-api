@@ -27,7 +27,7 @@ public class OrcTrailServiceImpl implements OrcTrailService {
 	}
 
 	@Override
-	public List<OrcamentoDTO> findAll() {
+	public List<OrcamentoDTO> buscarTodos() {
 		return orcTrailRepository.buscarTodos();
 	}
 
@@ -38,6 +38,11 @@ public class OrcTrailServiceImpl implements OrcTrailService {
 	@Override
 	public List<Integer> buscarNumOrcamentosPorData(Date data) {
 		return orcTrailRepository.buscarNumOrcamentosPorData(MethodsUtils.formatarDataString(data, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD));
+	}
+
+	@Override
+	public List<OrcTrail> findAll() {
+		return orcTrailRepository.findAll();
 	}
 
 }
