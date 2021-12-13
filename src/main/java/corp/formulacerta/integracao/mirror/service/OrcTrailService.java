@@ -17,4 +17,7 @@ public interface OrcTrailService {
 	List<Integer> buscarNumOrcamentosPorData(Date data);
 	
 	List<OrcTrail> findAll();
+	
+	List<OrcTrail> buscarOrcamentosNaoIntegrados(Date data);
+
 }

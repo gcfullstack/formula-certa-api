@@ -27,8 +27,8 @@ public class OrcamentoFormulaCertaServiceImpl implements OrcamentoFormulaCertaSe
 	}
 	
 	@Override
-	public List<OrcamentoDTO> findOrcamentoByLastDataCadastro(Date data) {
-		return orcamentoFormulaCertaRepository.findOrcamentoByLastDataCadastro(data).stream().map(orc -> new OrcamentoDTO(orc)).collect(Collectors.toList());
+	public List<OrcamentoDTO> findOrcamentoByLastDataCadastro(String data) {
+		return orcamentoFormulaCertaRepository.findOrcamentoByLastDataCadastro(data,64).stream().map(orc -> new OrcamentoDTO(orc)).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -49,6 +49,11 @@ public class OrcamentoFormulaCertaServiceImpl implements OrcamentoFormulaCertaSe
 	@Override
 	public List<String> buscarSubstanciasDoOrcamento(Integer numOrc, Integer codFilial, String serie) {
 		return orcamentoFormulaCertaRepository.buscarSubstanciasDoOrcamento(numOrc, codFilial, serie);
+	}
+
+	@Override
+	public boolean isOrcamentoAprovado(Integer numOrc, Integer codFilial, String serie) {
+		return orcamentoFormulaCertaRepository.buscarOrcamentoAprovado(numOrc, codFilial, serie) > 0;
 	}
 
 }

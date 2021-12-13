@@ -3,6 +3,8 @@ package corp.formulacerta.integracao.model.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import corp.formulacerta.integracao.mirror.model.OrcTrail;
+
 public class OrcamentoDTO {
 
 	private String descricaoSimples;
@@ -57,6 +59,8 @@ public class OrcamentoDTO {
 	
 	private String idProdutoTray;
 	
+	private Integer qtAprov;
+	
 	public OrcamentoDTO() {
 		super();
 	}
@@ -102,7 +106,9 @@ public class OrcamentoDTO {
 		this.estoqueAtual = orcamentoInterface.getEstoqueAtual();
 		this.categoria = orcamentoInterface.getCategoria();
 		this.serie = orcamentoInterface.getSerie();
+		this.qtAprov = orcamentoInterface.getQtAprov();
 	}
+	
 
 	public String getDescricaoSimples() {
 		return descricaoSimples;
@@ -311,6 +317,16 @@ public class OrcamentoDTO {
 	public void setSerie(String serie) {
 		this.serie = serie;
 	}
+	
+	public Integer getQtAprov() {
+		return qtAprov;
+	}
+
+	public void setQtAprov(Integer qtAprov) {
+		this.qtAprov = qtAprov;
+	}
+
+
 
 
 
@@ -364,6 +380,8 @@ public class OrcamentoDTO {
 		public String getCategoria();
 		
 		public String getSerie();
+		
+		public Integer getQtAprov();
 	}
 
 }

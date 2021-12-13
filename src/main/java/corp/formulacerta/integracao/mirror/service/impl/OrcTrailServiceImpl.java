@@ -45,4 +45,9 @@ public class OrcTrailServiceImpl implements OrcTrailService {
 		return orcTrailRepository.findAll();
 	}
 
+	@Override
+	public List<OrcTrail> buscarOrcamentosNaoIntegrados(Date data) {
+		return orcTrailRepository.buscarOrcamentosNaoIntegrados(data);
+	}
+
 }

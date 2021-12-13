@@ -16,19 +16,21 @@ import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
 @Entity
 @Table(name = "ORCAMENTO")
 public class OrcTrail implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="ID")
-	private Integer id;
+	@Column(name = "ID")
+	private String id;
 	
 	@Column(name = "DESC_SIMPLES")
 	private String descricaoSimples;
 
 	@Column(name = "DESC_COMPLETA")
 	private String descricaoCompleta;
+
+	@Column(name = "SERIE")
+	private String serie;
 
 	@Column(name = "COD_FILIAL")
 	private Integer codFilial;
@@ -44,7 +46,7 @@ public class OrcTrail implements Serializable {
 
 	@Column(name = "DATA_ENTRADA")
 	private Date dataEntrada;
-	
+
 	@Column(name = "DATA_CADASTRO_FORMULA_CERTA")
 	private Date dataCadastroFormulaCerta;
 
@@ -56,7 +58,7 @@ public class OrcTrail implements Serializable {
 
 	@Column(name = "UNIDADE")
 	private String unidade;
-	
+
 	@Column(name = "NOME_FUNCIONARIO")
 	private String nomeFuncionario;
 
@@ -95,15 +97,16 @@ public class OrcTrail implements Serializable {
 
 	@Column(name = "CATEGORIA")
 	private String categoria;
-	
+
 	@Column(name = "ID_PRODUTO_TRAY")
 	private String idProdutoTray;
-	
+
 	public OrcTrail() {
 		super();
 	}
 
 	public OrcTrail(OrcamentoDTO dto) {
+		this.id = dto.getNumOrcamento() + "-" + dto.getSerie() + "-" + dto.getCodFilial();
 		this.descricaoSimples = dto.getDescricaoSimples();
 		this.descricaoCompleta = dto.getDescricaoCompleta();
 		this.codFilial = dto.getCodFilial();
@@ -128,13 +131,14 @@ public class OrcTrail implements Serializable {
 		this.estoqueAtual = dto.getEstoqueAtual();
 		this.categoria = dto.getCategoria();
 		this.dataCadastroFormulaCerta = dto.getDataCadastro();
+		this.serie = dto.getSerie();
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -313,7 +317,7 @@ public class OrcTrail implements Serializable {
 	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
-	
+
 	public String getIdProdutoTray() {
 		return idProdutoTray;
 	}
@@ -321,7 +325,7 @@ public class OrcTrail implements Serializable {
 	public void setIdProdutoTray(String idProdutoTray) {
 		this.idProdutoTray = idProdutoTray;
 	}
-	
+
 	public String getNomeFuncionario() {
 		return nomeFuncionario;
 	}
@@ -329,10 +333,18 @@ public class OrcTrail implements Serializable {
 	public void setNomeFuncionario(String nomeFuncionario) {
 		this.nomeFuncionario = nomeFuncionario;
 	}
-	
+
+	public String getSerie() {
+		return serie;
+	}
+
+	public void setSerie(String serie) {
+		this.serie = serie;
+	}
+
 	public interface OrcamentoInterfaceDTO {
 		public Integer getId();
-		
+
 		public String getDescricaoSimples();
 
 		public String getDescricaoCompleta();
@@ -344,7 +356,7 @@ public class OrcTrail implements Serializable {
 		public Integer getNumOrcamento();
 
 		public Date getDataEntrada();
-		
+
 		public Integer getCodCliente();
 
 		public BigDecimal getQuantidade();
@@ -352,7 +364,7 @@ public class OrcTrail implements Serializable {
 		public String getUnidade();
 
 		public String getNomeFuncionario();
-		
+
 		public Integer getCodFuncionario();
 
 		public String getFormaFarmaceutica();

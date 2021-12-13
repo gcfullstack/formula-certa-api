@@ -1,5 +1,6 @@
 package corp.formulacerta.integracao.mirror.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +29,8 @@ public interface OrcTrailRepository extends JpaRepository<OrcTrail, Integer> {
 	
 	@Query("select o from OrcTrail o order by o.id desc")
 	List<OrcTrail> findAll();
+	
+	@Query("select o from OrcTrail o where o.idProdutoTray is null and o.dataEntrada > :data")
+	List<OrcTrail> buscarOrcamentosNaoIntegrados(@Param("data") Date data);
 	
 }

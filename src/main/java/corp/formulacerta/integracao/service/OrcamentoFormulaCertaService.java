@@ -8,7 +8,7 @@ public interface OrcamentoFormulaCertaService {
 	
 	List<OrcamentoDTO> findOrcamentoBiggerThanCustomID(Integer lastId);
 	
-	List<OrcamentoDTO> findOrcamentoByLastDataCadastro(Date data);
+	List<OrcamentoDTO> findOrcamentoByLastDataCadastro(String data);
 	
 	List<OrcamentoDTO> findOrcamentoByDataEntrada(Date data);
 	
@@ -17,5 +17,7 @@ public interface OrcamentoFormulaCertaService {
 	List<Integer> findNrOrcsPorData(Date data);	
 	
 	List<String> buscarSubstanciasDoOrcamento(Integer numOrc, Integer codFilial, String serie);
+	
+	boolean isOrcamentoAprovado(Integer numOrc, Integer codFilial, String serie);
 
 }
