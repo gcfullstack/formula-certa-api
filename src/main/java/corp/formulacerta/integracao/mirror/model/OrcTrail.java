@@ -13,92 +13,62 @@ import javax.persistence.Table;
 
 import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
 
-@Entity
-@Table(name = "ORCAMENTO")
 public class OrcTrail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name = "ID")
 	private String id;
 	
-	@Column(name = "DESC_SIMPLES")
 	private String descricaoSimples;
 
-	@Column(name = "DESC_COMPLETA")
 	private String descricaoCompleta;
 
-	@Column(name = "SERIE")
 	private String serie;
 
-	@Column(name = "COD_FILIAL")
 	private Integer codFilial;
 
-	@Column(name = "PRECO")
 	private BigDecimal preco;
 
-	@Column(name = "PRECO_OFERTA")
 	private BigDecimal precoOferta;
 
-	@Column(name = "NUM_ORCAMENTO")
 	private Integer numOrcamento;
 
-	@Column(name = "DATA_ENTRADA")
 	private Date dataEntrada;
 
-	@Column(name = "DATA_CADASTRO_FORMULA_CERTA")
 	private Date dataCadastroFormulaCerta;
 
-	@Column(name = "COD_CLIENTE")
 	private Integer codCliente;
 
-	@Column(name = "QUANTIDADE")
 	private BigDecimal quantidade;
 
-	@Column(name = "UNIDADE")
 	private String unidade;
 
-	@Column(name = "NOME_FUNCIONARIO")
 	private String nomeFuncionario;
 
-	@Column(name = "COD_FUNCIONARIO")
 	private Integer codFuncionario;
 
-	@Column(name = "FORMA_FARMACEUTICA")
 	private String formaFarmaceutica;
 
-	@Column(name = "TRATAMENTO")
 	private String tratamento;
 
-	@Column(name = "COD_FORMA_FARMACEUTICA")
 	private Integer codFormaFarmaceutica;
 
-	@Column(name = "DISPONIVEL")
 	private String disponivel;
 
-	@Column(name = "MODELO")
 	private String modelo;
 
-	@Column(name = "MARCA")
 	private String marca;
 
-	@Column(name = "COMPRIMENTO")
 	private BigDecimal comprimento;
 
-	@Column(name = "LARGURA")
 	private BigDecimal largura;
 
-	@Column(name = "ALTURA")
 	private BigDecimal altura;
 
-	@Column(name = "ESTOQUE_ATUAL")
 	private Integer estoqueAtual;
 
-	@Column(name = "CATEGORIA")
 	private String categoria;
 
-	@Column(name = "ID_PRODUTO_TRAY")
 	private String idProdutoTray;
 
 	public OrcTrail() {

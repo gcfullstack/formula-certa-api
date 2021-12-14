@@ -7,10 +7,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import corp.formulacerta.integracao.mirror.model.LogConsultaFormulaCerta;
 import corp.formulacerta.integracao.mirror.model.OrcTrail;
-import corp.formulacerta.integracao.mirror.service.LogConsultaFormulaCertaService;
-import corp.formulacerta.integracao.mirror.service.OrcTrailService;
 import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
 import corp.formulacerta.integracao.n8n.model.dto.LogConsultaFormulaCertaDTO;
 import corp.formulacerta.integracao.n8n.model.dto.OrcamentoN8N;
@@ -28,11 +25,7 @@ import corp.formulacerta.integracao.utils.MethodsUtils;
 @Service
 public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCertaService {
 	
-	private final LogConsultaFormulaCertaService logConsultaFormulaCertaService;
-	
 	private final OrcamentoFormulaCertaService orcamentoFormulaCertaService;
-	
-	private final OrcTrailService orcTrailService;
 	
 	private final ProdutoService produtoService;
 	
@@ -43,12 +36,10 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	private static final Logger logger = Logger.getLogger(IntegradorFormulaCertaServiceImpl.class.getName());
 	
 
-	public IntegradorFormulaCertaServiceImpl(LogConsultaFormulaCertaService logConsultaFormulaCertaService,
-			OrcamentoFormulaCertaService orcamentoFormulaCertaService, OrcTrailService orcTrailService,ProdutoService produtoService, OrcamentoN8NService orcamentoN8NService, LogOrcamentoN8NService logOrcamentoN8NService) {
+	public IntegradorFormulaCertaServiceImpl(
+			OrcamentoFormulaCertaService orcamentoFormulaCertaService,ProdutoService produtoService, OrcamentoN8NService orcamentoN8NService, LogOrcamentoN8NService logOrcamentoN8NService) {
 		super();
-		this.logConsultaFormulaCertaService = logConsultaFormulaCertaService;
 		this.orcamentoFormulaCertaService = orcamentoFormulaCertaService;
-		this.orcTrailService = orcTrailService;
 		this.produtoService = produtoService;
 		this.orcamentoN8NService = orcamentoN8NService;
 		this.logOrcamentoN8NService = logOrcamentoN8NService;
