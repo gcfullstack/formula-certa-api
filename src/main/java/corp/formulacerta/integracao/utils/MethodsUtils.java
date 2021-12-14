@@ -25,4 +25,16 @@ public class MethodsUtils {
 		return dataFormatada;
 	}
 
+	
+	public static Date formatarStringData(String data, String formato) {
+		Date dataFormatada = null;
+		if (data != null) {
+			SimpleDateFormat format = new SimpleDateFormat(formato);
+			try {
+				dataFormatada = format.parse(data);
+			} catch (Exception e) {
+			}
+		}
+		return dataFormatada;
+	}
 }

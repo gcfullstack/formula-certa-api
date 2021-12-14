@@ -13,97 +13,70 @@ import javax.persistence.Table;
 
 import corp.formulacerta.integracao.model.dto.OrcamentoDTO;
 
-@Entity
-@Table(name = "ORCAMENTO")
 public class OrcTrail implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="ID")
-	private Integer id;
+	private String id;
 	
-	@Column(name = "DESC_SIMPLES")
 	private String descricaoSimples;
 
-	@Column(name = "DESC_COMPLETA")
 	private String descricaoCompleta;
 
-	@Column(name = "COD_FILIAL")
+	private String serie;
+
 	private Integer codFilial;
 
-	@Column(name = "PRECO")
 	private BigDecimal preco;
 
-	@Column(name = "PRECO_OFERTA")
 	private BigDecimal precoOferta;
 
-	@Column(name = "NUM_ORCAMENTO")
 	private Integer numOrcamento;
 
-	@Column(name = "DATA_ENTRADA")
 	private Date dataEntrada;
-	
-	@Column(name = "DATA_CADASTRO_FORMULA_CERTA")
+
 	private Date dataCadastroFormulaCerta;
 
-	@Column(name = "COD_CLIENTE")
 	private Integer codCliente;
 
-	@Column(name = "QUANTIDADE")
 	private BigDecimal quantidade;
 
-	@Column(name = "UNIDADE")
 	private String unidade;
-	
-	@Column(name = "NOME_FUNCIONARIO")
+
 	private String nomeFuncionario;
 
-	@Column(name = "COD_FUNCIONARIO")
 	private Integer codFuncionario;
 
-	@Column(name = "FORMA_FARMACEUTICA")
 	private String formaFarmaceutica;
 
-	@Column(name = "TRATAMENTO")
 	private String tratamento;
 
-	@Column(name = "COD_FORMA_FARMACEUTICA")
 	private Integer codFormaFarmaceutica;
 
-	@Column(name = "DISPONIVEL")
 	private String disponivel;
 
-	@Column(name = "MODELO")
 	private String modelo;
 
-	@Column(name = "MARCA")
 	private String marca;
 
-	@Column(name = "COMPRIMENTO")
 	private BigDecimal comprimento;
 
-	@Column(name = "LARGURA")
 	private BigDecimal largura;
 
-	@Column(name = "ALTURA")
 	private BigDecimal altura;
 
-	@Column(name = "ESTOQUE_ATUAL")
 	private Integer estoqueAtual;
 
-	@Column(name = "CATEGORIA")
 	private String categoria;
-	
-	@Column(name = "ID_PRODUTO_TRAY")
+
 	private String idProdutoTray;
-	
+
 	public OrcTrail() {
 		super();
 	}
 
 	public OrcTrail(OrcamentoDTO dto) {
+		this.id = dto.getNumOrcamento() + "-" + dto.getSerie() + "-" + dto.getCodFilial();
 		this.descricaoSimples = dto.getDescricaoSimples();
 		this.descricaoCompleta = dto.getDescricaoCompleta();
 		this.codFilial = dto.getCodFilial();
@@ -128,13 +101,14 @@ public class OrcTrail implements Serializable {
 		this.estoqueAtual = dto.getEstoqueAtual();
 		this.categoria = dto.getCategoria();
 		this.dataCadastroFormulaCerta = dto.getDataCadastro();
+		this.serie = dto.getSerie();
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -313,7 +287,7 @@ public class OrcTrail implements Serializable {
 	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
-	
+
 	public String getIdProdutoTray() {
 		return idProdutoTray;
 	}
@@ -321,7 +295,7 @@ public class OrcTrail implements Serializable {
 	public void setIdProdutoTray(String idProdutoTray) {
 		this.idProdutoTray = idProdutoTray;
 	}
-	
+
 	public String getNomeFuncionario() {
 		return nomeFuncionario;
 	}
@@ -329,10 +303,18 @@ public class OrcTrail implements Serializable {
 	public void setNomeFuncionario(String nomeFuncionario) {
 		this.nomeFuncionario = nomeFuncionario;
 	}
-	
+
+	public String getSerie() {
+		return serie;
+	}
+
+	public void setSerie(String serie) {
+		this.serie = serie;
+	}
+
 	public interface OrcamentoInterfaceDTO {
 		public Integer getId();
-		
+
 		public String getDescricaoSimples();
 
 		public String getDescricaoCompleta();
@@ -344,7 +326,7 @@ public class OrcTrail implements Serializable {
 		public Integer getNumOrcamento();
 
 		public Date getDataEntrada();
-		
+
 		public Integer getCodCliente();
 
 		public BigDecimal getQuantidade();
@@ -352,7 +334,7 @@ public class OrcTrail implements Serializable {
 		public String getUnidade();
 
 		public String getNomeFuncionario();
-		
+
 		public Integer getCodFuncionario();
 
 		public String getFormaFarmaceutica();

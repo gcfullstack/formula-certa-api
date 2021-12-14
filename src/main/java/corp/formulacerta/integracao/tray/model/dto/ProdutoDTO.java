@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import corp.formulacerta.integracao.mirror.model.OrcTrail;
+import corp.formulacerta.integracao.n8n.model.dto.OrcamentoN8N;
 import corp.formulacerta.integracao.utils.ConstantsUtils;
 import corp.formulacerta.integracao.utils.MethodsUtils;
 
@@ -108,6 +109,32 @@ public class ProdutoDTO {
 	}
 
 	public ProdutoDTO(OrcTrail orc) {
+		super();
+		this.name = orc.getDescricaoSimples();
+		this.description = orc.getDescricaoCompleta();
+		this.descriptionSmall = "Forma Farmaceutica:" + orc.getFormaFarmaceutica() + "- Tratamento: " + orc.getTratamento() +/* " - Quantidade: "  + orc.getQuantidade() + " - Unidade: " + orc.getUnidade() + */" - Cód.Filial: " + orc.getCodFilial() + " - Data Entrada: " + MethodsUtils.formatarDataString(orc.getDataEntrada(), ConstantsUtils.DATE_FORMAT_DD_MM_YYYY_BAR) + " - Cód.Cliente: " + (orc.getCodCliente() != null ? orc.getCodCliente() : "") + " - Cód. Forma Farmacêutica: " + orc.getCodFormaFarmaceutica() + " - Cód. Funcionário: " + orc.getCodFuncionario();
+		this.price = orc.getPreco();
+		this.costPrice = orc.getPreco();
+		this.promotionalPrice = orc.getPrecoOferta();
+		this.brand = orc.getMarca();
+		this.model = orc.getModelo();
+		this.weight = 1000;
+		this.length = orc.getComprimento().intValue();
+		this.width = orc.getLargura().intValue();
+		this.height = orc.getAltura().intValue();
+		// TODO: quantidade nao esta definido
+		this.stock = 1;//orc.getQuantidade().intValue();
+		this.categoryId = ConstantsUtils.ID_CATEGORIA_TRAY;
+		this.available = orc.getDisponivel().equals("SIM") ? 1 : 0;
+		this.availability = "3";
+		this.availabilityDays = 3;
+		this.reference = orc.getNumOrcamento().toString();
+		this.startPromotion = new Date();
+		this.endPromotion = MethodsUtils.addDaysInDate(new Date(), 30);
+		this.pictureSource1 = ConstantsUtils.URL_REPOSITORIO_IMAGENS; // Concatenar o tipo de forma farmaceutica. + orc.getCodFormaFarmaceutica() + ".jpg"
+	}
+	
+	public ProdutoDTO(OrcamentoN8N orc) {
 		super();
 		this.name = orc.getDescricaoSimples();
 		this.description = orc.getDescricaoCompleta();
