@@ -1,5 +1,8 @@
 package corp.formulacerta.integracao.service.impl;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -54,9 +57,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	public void executarIntegracao() {
 		// buscar no mongo todo os orcamento que estao com idtray igual a nulo e a data de datadastro
 		// seja maior que a data de hoje menos 3 dias (d-3)
-		Calendar c = Calendar.getInstance();
-		c.set(2021, 6, 13, 00, 00);
-		List<OrcamentoN8N> orcamentosNaoIntegrados = orcamentoN8NService.buscarOrcamentoByDateLessThanCurrentDate(c.getTime());
+		List<OrcamentoN8N> orcamentosNaoIntegrados = orcamentoN8NService.buscarOrcamentoByDateLessThanCurrentDate(getCurrentDateMinusDays(3));
 		if(!orcamentosNaoIntegrados.isEmpty()) {
 			for (OrcamentoN8N orcNaoIntegrado : orcamentosNaoIntegrados) {
 				// buscar na attive, os orcamentos que tenham numorc, filial e serie equivalentes ao registros das linhas de cima
@@ -70,8 +71,12 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 		
 		String lastDataCadastroStr = logOrcamentoN8NService.buscarUltimoRegistroLog().getLastDataCadastro();
 		
-		Date lastDataCadastroImported = MethodsUtils.formatarStringData(lastDataCadastroStr, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_TT);
+		lastDataCadastroStr = Instant.parse(lastDataCadastroStr).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS));
+		
+		Date lastDataCadastroImported = MethodsUtils.formatarStringData(lastDataCadastroStr, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+		System.out.println("Ultima data de importacao: " + lastDataCadastroImported);
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByLastDataCadastro(lastDataCadastroStr);
+		System.out.println("Orcamentos encontrados: " + orcamentos.size());
 		if(!orcamentos.isEmpty()) {
 			for (OrcamentoDTO orc : orcamentos) {
 					List<String> substancias = orcamentoFormulaCertaService.buscarSubstanciasDoOrcamento(orc.getNumOrcamento(), orc.getCodFilial(), orc.getSerie());
