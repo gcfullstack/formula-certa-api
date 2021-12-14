@@ -1,16 +1,11 @@
 package corp.formulacerta.integracao.n8n.model.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class LogConsultaFormulaCertaDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String _id;
-
-	private Integer id;
-
 	private String dataExec;
 
 	private Boolean recordFound;
@@ -27,27 +22,9 @@ public class LogConsultaFormulaCertaDTO implements Serializable {
 	public LogConsultaFormulaCertaDTO(String _id, Integer id, String dataExec, Boolean recordFound,
 			String lastDataCadastro) {
 		super();
-		this._id = _id;
-		this.id = id;
 		this.dataExec = dataExec;
 		this.recordFound = recordFound;
 		this.lastDataCadastro = lastDataCadastro;
-	}
-
-	public String get_id() {
-		return _id;
-	}
-
-	public void set_id(String _id) {
-		this._id = _id;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getDataExec() {
