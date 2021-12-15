@@ -39,8 +39,8 @@ application:
     tray:
         consumer_key: 11912e02e762f4bc1d3f24a724cccb16ac9010cddeb489b2f76b918f9be93233 
         consumer_secret: ca73ba70cc6fa150b404a27f167bb867175117abca1264f943444e20eed6a99b
-        code: 9ffa93a74c46e0781747c8421fc10870dcc174b2347e42fcd751f2535054e5be   
-        url: https://isotec.commercesuite.com.br/web_api/
+        code: 4c5625cc2547e8ea0f5f780575ac04b9cb13df72234602a31d345933cb6f992b
+        url: https://www.attivecare.com.br/web_api/
         environment: prod
                
  
