@@ -2,6 +2,7 @@ package corp.formulacerta.integracao.mirror.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +20,9 @@ public class OrcTrailController {
 		this.orcamentoN8NService = orcamentoN8NService;
 	}
 
-	@GetMapping
-	public ResponseEntity<?> buscarTodos() {
-		return ResponseEntity.ok(orcamentoN8NService.buscarOrcamento());
+	@GetMapping("/{page}")
+	public ResponseEntity<?> buscarTodos(@PathVariable("page") Integer page) {
+		return ResponseEntity.ok(orcamentoN8NService.buscarOrcamento(page));
 	}
 	
 	/**

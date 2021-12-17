@@ -7,7 +7,7 @@ import corp.formulacerta.integracao.n8n.model.dto.OrcamentoN8N;
 
 public interface OrcamentoN8NService {
 
-	public OrcamentoN8N[] buscarOrcamento();
+	public OrcamentoN8N[] buscarOrcamento(Integer page);
 	
 	public Object salvarOrcamento(Object dto, Class clazz);
 	
