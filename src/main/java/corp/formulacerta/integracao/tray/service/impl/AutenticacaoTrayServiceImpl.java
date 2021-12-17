@@ -67,7 +67,7 @@ public class AutenticacaoTrayServiceImpl implements AutenticacaoTrayService {
 			response = restTemplate.getForEntity(url, AccessTokenDTO.class);
 			AccessTokenTrayConfig.setToken(response.getBody());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			return autenticar();
 		}
 		return response.getBody();
 
