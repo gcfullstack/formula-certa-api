@@ -17,7 +17,7 @@ import corp.formulacerta.integracao.service.IntegradorFormulaCertaService;
 import corp.formulacerta.integracao.service.OrcamentoFormulaCertaService;
 
 @RestController
-@RequestMapping("/api/public/integrar")
+@RequestMapping("/api/integrar")
 public class IntegracaoFormulaCertaController {
 	
 	private final IntegradorFormulaCertaService service;
