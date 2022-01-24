@@ -125,7 +125,7 @@ public class ProdutoDTO {
 		// TODO: quantidade nao esta definido
 		this.stock = 1;//orc.getQuantidade().intValue();
 		this.categoryId = ConstantsUtils.ID_CATEGORIA_TRAY;
-		this.available = orc.getDisponivel().equals("SIM") ? 1 : 0;
+		this.available = 1;
 		this.availability = "3";
 		this.availabilityDays = 3;
 		this.reference = orc.getNumOrcamento().toString();
