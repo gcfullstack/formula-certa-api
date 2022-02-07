@@ -131,7 +131,7 @@ public class ProdutoDTO {
 		this.reference = orc.getNumOrcamento().toString();
 		this.startPromotion = new Date();
 		this.endPromotion = MethodsUtils.addDaysInDate(new Date(), 30);
-		this.pictureSource1 = ConstantsUtils.URL_REPOSITORIO_IMAGENS; // Concatenar o tipo de forma farmaceutica. + orc.getCodFormaFarmaceutica() + ".jpg"
+		this.pictureSource1 = MethodsUtils.getImageFromCodFormaFarmaceutica(orc.getCodFormaFarmaceutica()); // Concatenar o tipo de forma farmaceutica. + orc.getCodFormaFarmaceutica() + ".jpg"
 	}
 	
 	public ProdutoDTO(OrcamentoN8N orc) {

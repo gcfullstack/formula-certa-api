@@ -85,6 +85,20 @@ public class OrcamentoN8NServiceImpl implements OrcamentoN8NService {
 			throw new RuntimeException("Ocorreu um erro ao cadastrar o Produto na API Tray");
 		}
 	}
-
+	
+	@Override
+	public OrcamentoN8N[] buscarOrcamentoPorIdOrcamento(String id) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhcmVhIjoiVEkiLCJwZXJmaXMiOjEsInN1YiI6Imd1aWxoZXJtZS5jYW50b24iLCJub21lIjoiZ3VpbGhlcm1lLmNhbnRvbiIsImlkIjoiMzM0IiwiZXhwIjoxNjQwMDQ0ODAwLCJpbmZvIjoibnVsbCJ9.W31RD779qeNDLsVWAxgomUH-KaleV4TGNG7e8ibJdVEOXIHXhQDhkwVWMSC_3Yu8b9Zid_R7fVAMuUsSInUOeg");
+			String url = "https://webhooks.coocreation.com.br/webhook/api/attivecare-formulacerta/7e9559f6-7638-48fd-b2d5-54433818d6de/getbyorcid?id=" + id;
+			HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+			return  restTemplate.exchange(
+			    url, HttpMethod.GET, requestEntity, OrcamentoN8N[].class).getBody();
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro ao cadastrar o Produto na API Tray");
+		}
+	}
 	
 }

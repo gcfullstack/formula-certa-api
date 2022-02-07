@@ -14,6 +14,8 @@ public interface OrcamentoN8NService {
 	public Object atualizarOrcamento(Object dto, Class clazz);
 	
 	public List<OrcamentoN8N> buscarOrcamentoByDateLessThanCurrentDate(Date data);
+	
+	public OrcamentoN8N[] buscarOrcamentoPorIdOrcamento(String id);
 
 	
 }

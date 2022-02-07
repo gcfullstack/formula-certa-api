@@ -84,17 +84,14 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 					orc.setDescricaoSimples("Produto: " + (Integer.parseInt(orc.getSerie()) + 1));
 					OrcTrail orcTray = new OrcTrail(orc);
 					orcamentoN8NService.salvarOrcamento(new OrcamentoN8N(orcTray), OrcamentoN8N.class);
-					//OrcTrail orcSaved = orcTrailService.saveEntity(orcTray);
 					if(orc.getQtAprov() > 0) {
 						ProdutoCriadoDTO produtoIntegrado = produtoService.cadastrarProduto(new ProdutoDTO(orcTray));
 						orcamentoN8NService.atualizarOrcamento(new OrcamentoUpdateN8N(orcTray.getId(), produtoIntegrado.getId()), OrcamentoUpdateN8N.class);
 					}
-					//orcTrailService.updateIdProdutoTray(orcTray.getI, produtoIntegrado.getId());
 			}
 		}
-		System.out.println("finish");
 		logOrcamentoN8NService.salvarLogOrcamento(getLogObject(orcamentos, lastDataCadastroImported));
-	//	logConsultaFormulaCertaService.saveLog(getLogObject(orcamentos, lastDataCadastroImported));
+		System.out.println("finish");
 	}
 	
 	/*@Override
