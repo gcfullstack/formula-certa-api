@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 
 	private static final Logger logger = Logger.getLogger(IntegradorFormulaCertaServiceImpl.class.getName());
 	
+	private final static long QTD_DIAS_BUSCA_ORCAMENTO = 2;
 
 	public IntegradorFormulaCertaServiceImpl(
 			OrcamentoFormulaCertaService orcamentoFormulaCertaService,ProdutoService produtoService, OrcamentoN8NService orcamentoN8NService, LogOrcamentoN8NService logOrcamentoN8NService) {
@@ -74,6 +76,12 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 		lastDataCadastroStr = Instant.parse(lastDataCadastroStr).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS));
 		
 		Date lastDataCadastroImported = MethodsUtils.formatarStringData(lastDataCadastroStr, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+		long diffInMillies = Math.abs(new Date().getTime() - lastDataCadastroImported.getTime());
+		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		if (diff >= QTD_DIAS_BUSCA_ORCAMENTO) {
+			lastDataCadastroImported = MethodsUtils.definirPrimeiraHoraDoDia(new Date());
+			lastDataCadastroStr = MethodsUtils.formatarDataString(lastDataCadastroImported, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+		}
 		System.out.println("Ultima data de importacao: " + lastDataCadastroImported);
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByLastDataCadastro(lastDataCadastroStr);
 		System.out.println("Orcamentos encontrados: " + orcamentos.size());
@@ -81,7 +89,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 			for (OrcamentoDTO orc : orcamentos) {
 					List<String> substancias = orcamentoFormulaCertaService.buscarSubstanciasDoOrcamento(orc.getNumOrcamento(), orc.getCodFilial(), orc.getSerie());
 					orc.setDescricaoCompleta(String.join(",", substancias));
-					orc.setDescricaoSimples("Produto: " + (Integer.parseInt(orc.getSerie()) + 1));
+					orc.setDescricaoSimples("Manipulado: " + orc.getNumOrcamento() + " - " + (Integer.parseInt(orc.getSerie()) + 1));
 					OrcTrail orcTray = new OrcTrail(orc);
 					orcamentoN8NService.salvarOrcamento(new OrcamentoN8N(orcTray), OrcamentoN8N.class);
 					if(orc.getQtAprov() > 0) {
