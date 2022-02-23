@@ -48,14 +48,38 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	}
 
 	/**
-	 * verificar:
-	 * - se o produto integrou na tray com todos os campos, pois alteramos o construtor do new ProdutoDTO()
-	 * - testar tudo
+	 * Etapas do processo de importação e integração de orçamentos
+	 * 
+	 * 1 - É realizada uma consulta no banco do mongo, para buscar todos os orçamentos que ainda não foram integrados na Tray.
+	 * As condições da consulta é que o registro tenha o campo "idtray" igual a nulo e que a data de cadastro seja maior que a data atual subtraída de 3 dias.
+	 * Esta regra foi criada para que exista um limite de data para que o sistema tente integrar os orçamentos retardatários	 * 
+	 * Se algum registro for encontrado, ele será validado no banco do formula certa (firebird), afim de saber se esse orçamento ja foi aprovado.
+	 * Caso positivo, o orçamento sera integrado na Tray e o campo  "idtray" sera preenchido e atualizado no banco.
+	 * Caso negativo, não possui ação.
+	 * 
+	 * 2 - É realizada uma busca no mongo para buscar o ultimo log de execução salvo, pois ele contém a data de cadastro do ultimo orçamento importado.
+	 * Essa, servirá de referência para buscar os proximos orçamentos.
+	 * 
+	 * 3 - É realizada uma validação para verificar se a data de cadastro do orçamento mais recente cadastrado no banco é menor do que 
+	 * um determinado numero de dias, o qual é utilizado para definir um limite maximo de dias que o sistema ira permitir importar novos orçamentos.
+	 * Essa regra foi criada para o caso do sistema ficar muitos dias sem executar e quando for executar, acontecer de existir milhares de registros para serem
+	 * importados de uma vez.
+	 * Caso a diferença de dias seja maior do que a data limite, o sistema irá criar uma data padrao que é equivalente ao dia atual às 00:00:00hrs.
+	 * 
+	 * 4 - É realizada uma busca no banco do formula certa para verificar se existem registros(orçamentos) que possuam o campo data de cadastro
+	 * maior do que a data de cadastro (lastDataCadastro campo do banco) do registro encontrado na etapa 3
+	 * Os registros que forem encontrados serão integrados na tray, caso algum dos produtos que constituem o orçamento, esteja aprovado.
+	 * Essa regra foi criada desta forma, pois o banco do formula certa nao informa se um determinado produto do orçamento esta aprovado ou não,
+	 * ele possui apenas a quantidade de produtos aprovados.
+	 * 
+	 * 5 - No final um log é criado e salvo no banco, com a data de cadastro do orçamento mais recente encontrado. Para que ela sirva de referencia
+	 *  para buscar os proximos orçamentos
 	 */
 	@Override
 	public void executarIntegracao() {
-		// buscar no mongo todo os orcamento que estao com idtray igual a nulo e onde a data de datadastro
-		// seja maior que a data de hoje menos 3 dias (d-3)
+		/**
+		 * Passo 1
+		 */
 		List<OrcamentoN8N> orcamentosNaoIntegrados = orcamentoN8NService.buscarOrcamentoByDateLessThanCurrentDate(getCurrentDateMinusDays(3));
 		if(!orcamentosNaoIntegrados.isEmpty()) {
 			for (OrcamentoN8N orcNaoIntegrado : orcamentosNaoIntegrados) {
@@ -68,11 +92,17 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 			}
 		}
 		
+		/**
+		 * Passo 2
+		 */
 		String lastDataCadastroStr = logOrcamentoN8NService.buscarUltimoRegistroLog().getLastDataCadastro();
-		
 		lastDataCadastroStr = Instant.parse(lastDataCadastroStr).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS));
-		
 		Date lastDataCadastroImported = MethodsUtils.formatarStringData(lastDataCadastroStr, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+		
+		/**
+		 * Passo 3
+		 */
+		
 		long diffInMillies = Math.abs(new Date().getTime() - lastDataCadastroImported.getTime());
 		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		if (diff >= QTD_DIAS_BUSCA_ORCAMENTO) {
@@ -80,6 +110,11 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 			lastDataCadastroStr = MethodsUtils.formatarDataString(lastDataCadastroImported, ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
 		}
 		System.out.println("Ultima data de importacao: " + lastDataCadastroImported);
+		
+		
+		/**
+		 * Passo 4
+		 */
 		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByLastDataCadastro(lastDataCadastroStr);
 		System.out.println("Orcamentos encontrados: " + orcamentos.size());
 		if(!orcamentos.isEmpty()) {
@@ -95,8 +130,11 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 					}
 			}
 		}
+		
+		/**
+		 * Passo 5
+		 */
 		logOrcamentoN8NService.salvarLogOrcamento(getLogObject(orcamentos, lastDataCadastroImported));
-		System.out.println("finish");
 	}
 	
 	private String getFormaFarmaceuticaValidated(String formaFarmaceutica) {
