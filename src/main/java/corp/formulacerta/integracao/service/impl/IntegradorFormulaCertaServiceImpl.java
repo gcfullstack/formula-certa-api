@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
@@ -37,8 +36,6 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	
 	private final LogOrcamentoN8NService logOrcamentoN8NService;
 
-	private static final Logger logger = Logger.getLogger(IntegradorFormulaCertaServiceImpl.class.getName());
-	
 	private final static long QTD_DIAS_BUSCA_ORCAMENTO = 2;
 
 	public IntegradorFormulaCertaServiceImpl(
@@ -57,7 +54,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 	 */
 	@Override
 	public void executarIntegracao() {
-		// buscar no mongo todo os orcamento que estao com idtray igual a nulo e a data de datadastro
+		// buscar no mongo todo os orcamento que estao com idtray igual a nulo e onde a data de datadastro
 		// seja maior que a data de hoje menos 3 dias (d-3)
 		List<OrcamentoN8N> orcamentosNaoIntegrados = orcamentoN8NService.buscarOrcamentoByDateLessThanCurrentDate(getCurrentDateMinusDays(3));
 		if(!orcamentosNaoIntegrados.isEmpty()) {
@@ -89,7 +86,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 			for (OrcamentoDTO orc : orcamentos) {
 					List<String> substancias = orcamentoFormulaCertaService.buscarSubstanciasDoOrcamento(orc.getNumOrcamento(), orc.getCodFilial(), orc.getSerie());
 					orc.setDescricaoCompleta(String.join(",", substancias));
-					orc.setDescricaoSimples("Manipulado: " + orc.getNumOrcamento() + " - " + (Integer.parseInt(orc.getSerie()) + 1));
+					orc.setDescricaoSimples("Manipulado: " + orc.getNumOrcamento() + " - " + (Integer.parseInt(orc.getSerie()) + 1) + getFormaFarmaceuticaValidated(orc.getFormaFarmaceutica()));
 					OrcTrail orcTray = new OrcTrail(orc);
 					orcamentoN8NService.salvarOrcamento(new OrcamentoN8N(orcTray), OrcamentoN8N.class);
 					if(orc.getQtAprov() > 0) {
@@ -102,40 +99,10 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 		System.out.println("finish");
 	}
 	
-	/*@Override
-	public void executarIntegracao2(Date data) {
-		List<Integer> idsOrcamentosParaIntegrar = new ArrayList<>();
-		List<Integer> orcamentosNaoIntegradosDaData = orcamentoFormulaCertaService.findNrOrcsPorData(data);
-		
-		if(orcamentosNaoIntegradosDaData.isEmpty()) {
-			return;
-		}
-		
-		List<Integer> orcamentosIntegradosDaData = orcTrailService.buscarNumOrcamentosPorData(data);
-		
-		if(orcamentosIntegradosDaData.isEmpty()) {
-			idsOrcamentosParaIntegrar.addAll(orcamentosNaoIntegradosDaData);
-		}else {
-			idsOrcamentosParaIntegrar = orcamentosNaoIntegradosDaData.stream().filter(p -> !orcamentosIntegradosDaData.contains(p)).collect(Collectors.toList());
-		}
-		
-		for (Integer integer : idsOrcamentosParaIntegrar) {
-			System.out.println(integer+",");
-		}
-		
-		List<OrcamentoDTO> orcamentos = orcamentoFormulaCertaService.findOrcamentoByNrOrcs(idsOrcamentosParaIntegrar);
-		
-		if(!orcamentos.isEmpty()) {
-			for (OrcamentoDTO orc : orcamentos) {
-				OrcTrail orcTray = new OrcTrail(orc);
-				OrcTrail orcSaved = orcTrailService.saveEntity(orcTray);
-				ProdutoCriadoDTO produtoIntegrado = produtoService.cadastrarProduto(new ProdutoDTO(orcTray));
-				orcTrailService.updateIdProdutoTray(orcSaved.getId(), produtoIntegrado.getId());
-			}
-		}
-		//logConsultaFormulaCertaService.saveLog(getLogObject(orcamentos, 000));
-	}*/
-	
+	private String getFormaFarmaceuticaValidated(String formaFarmaceutica) {
+		return formaFarmaceutica != null ? " (" + formaFarmaceutica + ")" : "";
+	}
+
 	private LogConsultaFormulaCertaDTO getLogObject(List<OrcamentoDTO> orcamentos, Date lastDataCadastro) {
 		LogConsultaFormulaCertaDTO log = new LogConsultaFormulaCertaDTO();
 		log.setDataExec(MethodsUtils.formatarDataString(new Date(), ConstantsUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS));
