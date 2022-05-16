@@ -121,7 +121,7 @@ public class IntegradorFormulaCertaServiceImpl implements IntegradorFormulaCerta
 			for (OrcamentoDTO orc : orcamentos) {
 					List<String> substancias = orcamentoFormulaCertaService.buscarSubstanciasDoOrcamento(orc.getNumOrcamento(), orc.getCodFilial(), orc.getSerie());
 					orc.setDescricaoCompleta(String.join(",", substancias));
-					orc.setDescricaoSimples("Orçamento: " + orc.getNumOrcamento() + " - " + (Integer.parseInt(orc.getSerie()) + 1) + getFormaFarmaceuticaValidated(orc.getFormaFarmaceutica()));
+					orc.setDescricaoSimples("Orçamento: " + orc.getNumOrcamento() + " - " + orc.getSerie() + getFormaFarmaceuticaValidated(orc.getFormaFarmaceutica()));
 					OrcTrail orcTray = new OrcTrail(orc);
 					orcamentoN8NService.salvarOrcamento(new OrcamentoN8N(orcTray), OrcamentoN8N.class);
 					if(orc.getQtAprov() > 0) {
