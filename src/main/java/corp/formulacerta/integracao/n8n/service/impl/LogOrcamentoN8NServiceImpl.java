@@ -30,7 +30,7 @@ public class LogOrcamentoN8NServiceImpl implements LogOrcamentoN8NService {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhcmVhIjoiVEkiLCJwZXJmaXMiOjEsInN1YiI6Imd1aWxoZXJtZS5jYW50b24iLCJub21lIjoiZ3VpbGhlcm1lLmNhbnRvbiIsImlkIjoiMzM0IiwiZXhwIjoxNjQwMDQ0ODAwLCJpbmZvIjoibnVsbCJ9.W31RD779qeNDLsVWAxgomUH-KaleV4TGNG7e8ibJdVEOXIHXhQDhkwVWMSC_3Yu8b9Zid_R7fVAMuUsSInUOeg");
-			String url = "https://webhooks.coocreation.com.br/webhook/api/attivecare-formulacerta/2fc9eb8f-c9ee-4831-b037-5ba84110a8b4/savelog";
+			String url = "https://webhooks.attivecare.com.br/webhook/api/attivecare-formulacerta/2fc9eb8f-c9ee-4831-b037-5ba84110a8b4/savelog";
 			HttpEntity<String> request = new HttpEntity<String>(json, headers);
 			return restTemplate.postForEntity(url, request, LogConsultaFormulaCertaDTO.class).getBody();
 		} catch (Exception e) {
@@ -44,7 +44,7 @@ public class LogOrcamentoN8NServiceImpl implements LogOrcamentoN8NService {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhcmVhIjoiVEkiLCJwZXJmaXMiOjEsInN1YiI6Imd1aWxoZXJtZS5jYW50b24iLCJub21lIjoiZ3VpbGhlcm1lLmNhbnRvbiIsImlkIjoiMzM0IiwiZXhwIjoxNjQwMDQ0ODAwLCJpbmZvIjoibnVsbCJ9.W31RD779qeNDLsVWAxgomUH-KaleV4TGNG7e8ibJdVEOXIHXhQDhkwVWMSC_3Yu8b9Zid_R7fVAMuUsSInUOeg");
-			String url = "https://webhooks.coocreation.com.br/webhook/api/attivecare-formulacerta/2fc9eb8f-c9ee-4831-b037-5ba84110a8b4/getlast";
+			String url = "https://webhooks.attivecare.com.br/webhook/api/attivecare-formulacerta/2fc9eb8f-c9ee-4831-b037-5ba84110a8b4/getlast";
 			HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 			LogConsultaFormulaCertaDTO[] array = restTemplate.exchange(
 				    url, HttpMethod.GET, requestEntity, LogConsultaFormulaCertaDTO[].class).getBody();
